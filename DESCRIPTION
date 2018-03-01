@@ -1,14 +1,12 @@
 Package: rr
 Version: 0.0.0.1
 Title: Rocking R for UMCCR
-Description: What the package does (one paragraph).
+Description: Contains functions for bioinformatics analyses
 Authors@R: person("Peter", "Diakumis", email = "peterdiakumis@gmail.com", role = c("aut", "cre"))
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 ByteCompile: true
-Depends:
-    R (>=3.4.0)
 Imports: 
     dplyr,
     GenomicRanges,
@@ -17,6 +15,7 @@ Imports:
     readr,
     tidyr,
     vcfR,
+    magrittr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.0.1
 Suggests: 
