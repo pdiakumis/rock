@@ -1,3 +1,7 @@
 language: r
 cache: packages
+
 sudo: false
+
+bioc_packages:
+- GenomicRanges
