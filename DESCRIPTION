@@ -9,7 +9,6 @@ LazyData: true
 ByteCompile: true
 Imports: 
     dplyr,
-    GenomicRanges,
     ggplot2,
     glue,
     readr,
