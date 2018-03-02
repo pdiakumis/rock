@@ -1,5 +1,8 @@
 
-# rr
+## UMCCR Rocking R
+
+[![Travis build
+status](https://travis-ci.org/umccr/rr.svg?branch=master)](https://travis-ci.org/umccr/rr)
 
 `rr` is an R package that (hopefully) helps with the day to day
 bioinformatics life at UMCCR (UniMelb Centre for Cancer Research).
