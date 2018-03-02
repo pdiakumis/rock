@@ -7,5 +7,5 @@ test_that("atomics are greeted", {
 
 test_that("non-atomics are not greeted", {
   expect_error(hello(mtcars))
-  expect_error(hello(1:10))
+  expect_error(hello(list(1, 2, 3)))
 })
