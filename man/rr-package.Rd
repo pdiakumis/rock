@@ -2,14 +2,21 @@
 % Please edit documentation in R/rr-package.R
 \docType{package}
 \name{rr-package}
-\alias{rr}
 \alias{rr-package}
-\title{rr: Rocking R for UMCCR}
+\title{rr: Rocking R at UMCCR}
 \description{
-Contains functions for bioinformatics analyses
+The \code{rr} package provides functions for several bioinformatic
+analyses:
 }
-\author{
-\strong{Maintainer}: Peter Diakumis \email{peterdiakumis@gmail.com}
+\details{
+\itemize{
+\item Foo
+\item Bar
+\item Baz
+}
+}
+\section{Foo functions}{
 
+The foo functions do this, this and that.
 }
-\keyword{internal}
+

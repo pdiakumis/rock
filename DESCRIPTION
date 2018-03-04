@@ -1,8 +1,10 @@
 Package: rr
 Version: 0.0.0.1
-Title: Rocking R for UMCCR
+Title: Rocking R at UMCCR
 Description: Contains functions for bioinformatics analyses
 Authors@R: person("Peter", "Diakumis", email = "peterdiakumis@gmail.com", role = c("aut", "cre"))
+URL: https://github.com/umccr/rr
+BugReports: https://github.com/umccr/rr/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -15,8 +17,10 @@ Imports:
     readr,
     tidyr,
     vcfR,
-    magrittr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.0.1
 Suggests: 
-    testthat
+    testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

@@ -7,6 +7,6 @@
 lhs \%>\% rhs
 }
 \description{
-See \code{magrittr::\link[magrittr]{\%>\%}} for details.
+See \code{dplyr::\link[dplyr]{\%>\%}} for details.
 }
 \keyword{internal}
