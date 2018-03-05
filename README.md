@@ -3,6 +3,8 @@
 
 [![Travis build
 status](https://travis-ci.org/umccr/rr.svg?branch=master)](https://travis-ci.org/umccr/rr)
+[![Coverage
+status](https://codecov.io/gh/umccr/rr/branch/master/graph/badge.svg)](https://codecov.io/github/umccr/rr?branch=master)
 
 `rr` is an R package that (hopefully) helps with the day to day
 bioinformatics life at UMCCR (UniMelb Centre for Cancer Research).
