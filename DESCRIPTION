@@ -22,7 +22,8 @@ Imports:
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.0.1
 Suggests: 
-    testthat,
+    covr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat,
 VignetteBuilder: knitr

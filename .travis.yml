@@ -5,3 +5,6 @@ sudo: false
 
 bioc_packages:
 - GenomicRanges
+
+after_success:
+  - Rscript -e 'covr::codecov()'
