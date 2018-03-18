@@ -11,8 +11,8 @@ knitr::opts_chunk$set(
 )
 ```
 
-UMCCR Rocking R
----------------
+Rocking R at UMCCR
+==================
 
 [![Travis build status](https://travis-ci.org/umccr/rr.svg?branch=master)](https://travis-ci.org/umccr/rr)
 [![Coverage status](https://codecov.io/gh/umccr/rr/branch/master/graph/badge.svg)](https://codecov.io/github/umccr/rr?branch=master)

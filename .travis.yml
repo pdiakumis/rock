@@ -4,7 +4,7 @@ cache: packages
 sudo: false
 
 bioc_packages:
-- GenomicRanges
+  - GenomicRanges
 
 after_success:
   - Rscript -e 'covr::codecov()'
