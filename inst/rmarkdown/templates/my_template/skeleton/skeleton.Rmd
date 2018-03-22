@@ -1,0 +1,22 @@
+---
+title: "My Report"
+author: "Peter Diakumis"
+date: "`r format(Sys.time(), '%a %Y-%b-%d')`"
+output:
+  github_document
+    toc: true
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+Introduction
+------------
+
+Data
+----
+
+Methods
+-------
