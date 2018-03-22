@@ -1,5 +1,5 @@
 
-## UMCCR Rocking R
+# Rocking R at UMCCR
 
 [![Travis build
 status](https://travis-ci.org/umccr/rr.svg?branch=master)](https://travis-ci.org/umccr/rr)
