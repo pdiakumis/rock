@@ -16,6 +16,7 @@ Imports:
     GenomicRanges,
     ggplot2,
     glue,
+    magick,
     readr,
     tidyr,
     vcfR,
