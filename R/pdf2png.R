@@ -13,8 +13,10 @@
 #' @param png Path to output PNG file.
 #' @return Path to output PNG file as a side effect.
 #' @examples
+#' \dontrun{
 #' pdf2png("img1.pdf", "img1.png")
 #' pdf2png("img1.pdf")
+#' }
 #' @export
 pdf2png <- function(pdf, png = sub("pdf$", "png", pdf)) {
   stopifnot(grepl(".pdf$", pdf))

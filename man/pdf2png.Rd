@@ -25,6 +25,8 @@ by default it will output to the same path and with the same name as 'pdf',
 but with a 'png' suffix.
 }
 \examples{
+\dontrun{
 pdf2png("img1.pdf", "img1.png")
 pdf2png("img1.pdf")
+}
 }
