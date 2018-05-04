@@ -3,4 +3,5 @@
 export("%>%")
 export(hello)
 export(pdf2png)
+export(stamp)
 importFrom(dplyr,"%>%")
