@@ -4,5 +4,5 @@
 #'
 #' @export
 stamp <- function() {
-  cat("[", format(Sys.time(), usetz = TRUE), "]\n", sep = "")
+  cat("[", format(Sys.time(), usetz = TRUE), "]", sep = "")
 }
