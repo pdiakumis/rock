@@ -7,5 +7,5 @@
 stamp()
 }
 \description{
-See https://stackoverflow.com/a/10740502/2169986
+See \url{https://stackoverflow.com/a/10740502/2169986}
 }
