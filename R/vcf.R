@@ -14,10 +14,10 @@
 #' @export
 prep_manta_vcf <- function(vcf) {
   # Takes in VCF filename or vcfR object
-  stopifnot(class(vcf) == "vcfR" || file.exists(vcf))
+  stopifnot(class(vcf) == "vcfR" || (is.character(vcf) && file.exists(vcf)))
 
-  if (file.exists(vcf)) {
-      vcf <- vcfR::read.vcf(vcf)
+  if (is.character(vcf)) {
+    vcf <- vcfR::read.vcf(vcf)
   }
 
   # Get CHROM, POS, ID, END, MATEID, SVTYPE, BPI_START etc. from VCF
