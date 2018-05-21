@@ -1,6 +1,6 @@
-#' rr: Rocking R at UMCCR
+#' rock: Rocking R at UMCCR
 #'
-#' The `rr` package provides functions for several bioinformatic
+#' The `rock` package provides functions for several bioinformatic
 #' analyses:
 #'
 #' * Foo
@@ -11,7 +11,7 @@
 #' The foo functions do this, this and that.
 #'
 #' @docType package
-#' @name rr-package
+#' @name rock-package
 NULL
 
 .onAttach <- function(libname, pkgname) {

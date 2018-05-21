@@ -1,10 +1,10 @@
-Package: rr
+Package: rock
 Version: 0.0.0.1
 Title: Rocking R at UMCCR
 Description: Contains functions for bioinformatic analyses.
 Authors@R: person("Peter", "Diakumis", email = "peterdiakumis@gmail.com", role = c("aut", "cre"))
-URL: https://github.com/umccr/rr
-BugReports: https://github.com/umccr/rr/issues
+URL: https://github.com/umccr/rock
+BugReports: https://github.com/umccr/rock/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
