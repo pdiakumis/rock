@@ -7,18 +7,18 @@
 prep_manta_vcf(vcf)
 }
 \arguments{
-\item{vcf}{A vcfR object or a path to a VCF file}
+\item{vcf}{Path to a bgzipped VCF file}
 }
 \value{
 A data.frame (tibble) with the genomic coordinates
 of structural variants detected with Manta.
 }
 \description{
-Prepares a Manta VCF for display in a circos plot
+Prepares a Manta VCF for display in a circos plot. Requires bcftools to be
+installed in your PATH.
 }
 \examples{
 \dontrun{
-prep_manta_vcf(vcfr_object)
-prep_manta_vcf("/path/to/vcf")
+prep_manta_vcf("/path/to/sample.vcf.gz")
 }
 }

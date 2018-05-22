@@ -1,57 +1,64 @@
 #' Prepare Manta VCF for Circos
 #'
-#' Prepares a Manta VCF for display in a circos plot
+#' Prepares a Manta VCF for display in a circos plot. Requires bcftools to be
+#' installed in your PATH.
 #'
-#' @param vcf A vcfR object or a path to a VCF file
+#' @param vcf Path to a bgzipped VCF file
 #' @return A data.frame (tibble) with the genomic coordinates
 #'   of structural variants detected with Manta.
 #'
 #' @examples
 #' \dontrun{
-#' prep_manta_vcf(vcfr_object)
-#' prep_manta_vcf("/path/to/vcf")
+#' prep_manta_vcf("/path/to/sample.vcf.gz")
 #' }
 #' @export
 prep_manta_vcf <- function(vcf) {
-  # Takes in VCF filename or vcfR object
-  stopifnot(class(vcf) == "vcfR" || (is.character(vcf) && file.exists(vcf)))
+# vcf <- "/Users/pdiakumis/Desktop/projects/umccr/tothill_projects/data/a5/vcf/structural/E019-manta.vcf.gz"
 
-  if (is.character(vcf)) {
-    vcf <- vcfR::read.vcf(vcf)
+  stopifnot(is.character(vcf),
+            file.exists(vcf),
+            grepl("vcf.gz$", vcf))
+
+  if (system("bcftools -v", ignore.stdout = TRUE) != 0) {
+    stop("Oops, bcftools can't be found! Please install/add to PATH.")
   }
 
-  # Get CHROM, POS, ID, END, MATEID, SVTYPE, BPI_START etc. from VCF
-  # Instead of POS, we can use BPI_START
-  # Instead of raw END for non-BNDs, we can use BPI_END
-  DF <- vcf@fix[, c("CHROM", "POS", "ID", "FILTER")] %>%
-    tibble::as_tibble() %>%
-    tibble::rowid_to_column(var = "rowid") %>%
-    dplyr::bind_cols(vcfR::extract_info_tidy(vcf)) %>%
-    dplyr::mutate(chrom1 = CHROM,
-                  start1 = BPI_START,
-                  end1 = BPI_START,
-                  END = BPI_END) %>%
-    dplyr::select(rowid, chrom1, start1, end1, END, FILTER,
-                  ID, MATEID, SVTYPE, SVLEN)
+  if (system(paste0("bcftools view -h ",  vcf, " | grep 'BPI_START'"), ignore.stdout = TRUE) == 0) {
+    message(stamp(), " BPI has been run on this VCF. Using INFO/BPI_START and INFO/BPI_END for coordinates")
+    bcftools_query_command <- "bcftools query -f '%CHROM\t%INFO/BPI_START\t%INFO/BPI_END\t%ID\t%INFO/MATEID\t%INFO/SVTYPE\t%FILTER\n'"
+  } else {
+    message(stamp(), " BPI has not been run on this VCF. Using POS and INFO/END for coordinates")
+    bcftools_query_command <- "bcftools query -f '%CHROM\t%POS\t%INFO/END\t%ID\t%INFO/MATEID\t%INFO/SVTYPE\t%FILTER\n'"
+  }
+
+
+  DF <- system(paste(bcftools_query_command, vcf), intern = TRUE) %>%
+    tibble::tibble(all_cols = .) %>%
+    tidyr::separate(col = all_cols, into = c("chrom", "start", "end", "id", "mateid", "svtype", "filter"), sep = "\t") %>%
+    dplyr::mutate(rowid = 1:nrow(.), chrom1 = chrom, start1 = start, end1 = start, END = end) %>%
+    dplyr::select(rowid, chrom1, start1, end1, END, filter, id, mateid, svtype)
 
   # BNDs
+  # just keep first BND mates (i.e. discard duplicated information)
+  # see <https://github.com/Illumina/manta/blob/master/docs/developerGuide/ID.md>
   df_bnd <- DF %>%
-    dplyr::filter(SVTYPE == "BND") %>%
-    dplyr::bind_cols(., .[match(.$ID, .$MATEID), c("chrom1", "start1")]) %>%
+    dplyr::filter(svtype == "BND") %>%
+    dplyr::bind_cols(., .[match(.$id, .$mateid), c("chrom1", "start1")]) %>%
     dplyr::rename(chrom2 = chrom11, start2 = start11) %>%
-    dplyr::mutate(end2 = start2)
+    dplyr::mutate(end2 = start2,
+                  bndid = substring(id, nchar(id))) %>%
+    dplyr::filter(bndid == "1")
 
   # Other
   df_other <- DF %>%
-    dplyr::filter(SVTYPE != "BND") %>%
+    dplyr::filter(svtype != "BND") %>%
     dplyr::mutate(chrom2 = chrom1, start2 = END, end2 = END)
 
   # All together now
-  df_final <- df_other %>%
+  svs <- df_other %>%
     dplyr::bind_rows(df_bnd) %>%
-    dplyr::select(rowid, chrom1:end1, chrom2:end2, SVTYPE, ID, SVLEN, FILTER) %>%
+    dplyr::select(rowid, chrom1:end1, chrom2:end2, svtype, id, filter) %>%
     dplyr::arrange(rowid)
 
-  return(df_final)
+  return(svs)
 }
-
