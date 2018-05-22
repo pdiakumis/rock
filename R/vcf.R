@@ -4,6 +4,7 @@
 #' installed in your PATH.
 #'
 #' @param vcf Path to a bgzipped VCF file
+#' @param filter_pass Keep only variants annotated with a PASS FILTER? (default: TRUE)
 #' @return A data.frame (tibble) with the genomic coordinates
 #'   of structural variants detected with Manta.
 #'
@@ -12,8 +13,7 @@
 #' prep_manta_vcf("/path/to/sample.vcf.gz")
 #' }
 #' @export
-prep_manta_vcf <- function(vcf) {
-# vcf <- "/Users/pdiakumis/Desktop/projects/umccr/tothill_projects/data/a5/vcf/structural/E019-manta.vcf.gz"
+prep_manta_vcf <- function(vcf, filter_pass = TRUE) {
 
   stopifnot(is.character(vcf),
             file.exists(vcf),
@@ -62,5 +62,13 @@ prep_manta_vcf <- function(vcf) {
                   .data$chrom2, .data$start2, .data$end2, .data$svtype, .data$id, .data$filter) %>%
     dplyr::arrange(.data$rowid)
 
+  if (filter_pass) {
+    svs <- svs %>%
+      dplyr::filter(.data$filter == "PASS")
+  }
+
   return(svs)
 }
+
+# Debugging
+# vcf <- "/Users/pdiakumis/Desktop/projects/umccr/tothill_projects/data/a5/vcf/structural/E019-manta.vcf.gz"

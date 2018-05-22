@@ -4,10 +4,12 @@
 \alias{prep_manta_vcf}
 \title{Prepare Manta VCF for Circos}
 \usage{
-prep_manta_vcf(vcf)
+prep_manta_vcf(vcf, filter_pass = TRUE)
 }
 \arguments{
 \item{vcf}{Path to a bgzipped VCF file}
+
+\item{filter_pass}{Keep only variants annotated with a PASS FILTER? (default: TRUE)}
 }
 \value{
 A data.frame (tibble) with the genomic coordinates
