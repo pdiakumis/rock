@@ -1,7 +1,8 @@
-^rr\.Rproj$
+^rock\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^README\.Rmd$
 .travis.yml
 ^data-raw$
 ^codecov\.yml$
+^tmp$

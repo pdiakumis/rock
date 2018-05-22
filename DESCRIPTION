@@ -16,7 +16,9 @@ Imports:
     ggplot2,
     glue,
     readr,
+    tibble,
     tidyr,
+    rlang (>= 0.1.2)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.0.1
 Suggests: 

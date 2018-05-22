@@ -34,31 +34,33 @@ prep_manta_vcf <- function(vcf) {
 
   DF <- system(paste(bcftools_query_command, vcf), intern = TRUE) %>%
     tibble::tibble(all_cols = .) %>%
-    tidyr::separate(col = all_cols, into = c("chrom", "start", "end", "id", "mateid", "svtype", "filter"), sep = "\t") %>%
-    dplyr::mutate(rowid = 1:nrow(.), chrom1 = chrom, start1 = start, end1 = start, END = end) %>%
-    dplyr::select(rowid, chrom1, start1, end1, END, filter, id, mateid, svtype)
+    tidyr::separate(col = .data$all_cols, into = c("chrom", "start", "end", "id", "mateid", "svtype", "filter"), sep = "\t") %>%
+    dplyr::mutate(rowid = 1:nrow(.), chrom1 = .data$chrom, start1 = .data$start, end1 = .data$start, END = .data$end) %>%
+    dplyr::select(.data$rowid, .data$chrom1, .data$start1, .data$end1, .data$END, .data$filter, .data$id, .data$mateid, .data$svtype)
 
   # BNDs
   # just keep first BND mates (i.e. discard duplicated information)
   # see <https://github.com/Illumina/manta/blob/master/docs/developerGuide/ID.md>
   df_bnd <- DF %>%
-    dplyr::filter(svtype == "BND") %>%
+    dplyr::filter(.data$svtype == "BND") %>%
     dplyr::bind_cols(., .[match(.$id, .$mateid), c("chrom1", "start1")]) %>%
-    dplyr::rename(chrom2 = chrom11, start2 = start11) %>%
-    dplyr::mutate(end2 = start2,
-                  bndid = substring(id, nchar(id))) %>%
-    dplyr::filter(bndid == "1")
+    dplyr::rename(chrom2 = .data$chrom11, start2 = .data$start11) %>%
+    dplyr::mutate(end2 = .data$start2,
+                  bndid = substring(.data$id, nchar(.data$id))) %>%
+    dplyr::filter(.data$bndid == "1")
 
   # Other
   df_other <- DF %>%
-    dplyr::filter(svtype != "BND") %>%
-    dplyr::mutate(chrom2 = chrom1, start2 = END, end2 = END)
+    dplyr::filter(.data$svtype != "BND") %>%
+    dplyr::mutate(chrom2 = .data$chrom1, start2 = .data$END, end2 = .data$END)
 
   # All together now
   svs <- df_other %>%
     dplyr::bind_rows(df_bnd) %>%
-    dplyr::select(rowid, chrom1:end1, chrom2:end2, svtype, id, filter) %>%
-    dplyr::arrange(rowid)
+    dplyr::select(.data$rowid,
+                  .data$chrom1, .data$start1, .data$end1,
+                  .data$chrom2, .data$start2, .data$end2, .data$svtype, .data$id, .data$filter) %>%
+    dplyr::arrange(.data$rowid)
 
   return(svs)
 }
