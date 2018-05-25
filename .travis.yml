@@ -1,6 +1,10 @@
 language: r
 cache: packages
 
+os:
+  - linux
+  - osx
+
 sudo: false
 
 bioc_packages:
