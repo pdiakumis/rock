@@ -9,7 +9,7 @@ prep_manta_vcf(vcf, filter_pass = TRUE)
 \arguments{
 \item{vcf}{Path to bgzipped Manta VCF file. Needs to have \code{vcf.gz} suffix.}
 
-\item{filter_pass}{Keep only variants nnotated with a PASS FILTER? (default: TRUE)}
+\item{filter_pass}{Keep only variants annotated with a PASS FILTER? (default: TRUE).}
 }
 \value{
 A dataframe (\code{tibble}) with the following fields from the VCF:

@@ -14,7 +14,7 @@ the following info:
 \item length: chromosome length
 }}
 \usage{
-chr_info
+data(chr_info)
 }
 \description{
 Chromosome information for homo sapiens

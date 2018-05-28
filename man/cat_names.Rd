@@ -6,7 +6,7 @@
 \title{Names of awesome cats}
 \format{Atomic character vector with 3 elements}
 \usage{
-cat_names
+data(cat_names)
 }
 \description{
 A vector containing names of cats.

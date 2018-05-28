@@ -15,10 +15,12 @@ Imports:
     dplyr,
     ggplot2,
     glue,
+    OmicCircos,
+    purrr,
     readr,
+    rlang (>= 0.1.2),
     tibble,
     tidyr,
-    rlang (>= 0.1.2)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.0.1
 Suggests: 
