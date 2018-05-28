@@ -4,7 +4,7 @@
 \alias{plot_circos}
 \title{Generate Circos Plot}
 \usage{
-plot_circos(sv, cnv)
+plot_circos(sv = NULL, cnv = NULL)
 }
 \arguments{
 \item{sv}{An \code{sv} object}
