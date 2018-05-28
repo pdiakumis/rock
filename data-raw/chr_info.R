@@ -1,3 +1,4 @@
+require(devtools)
 require(GenomeInfoDb)
 
 chr_info <- GenomeInfoDb::genomeStyles("Homo_sapiens")

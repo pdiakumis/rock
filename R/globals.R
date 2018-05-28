@@ -1,1 +1,1 @@
-utils::globalVariables(".")
+utils::globalVariables(c(".", "circos_data"))
