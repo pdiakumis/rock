@@ -77,7 +77,8 @@ plot_circos <- function(sv = NULL, cnv = NULL) {
                        col = cnv$col, scale = FALSE)
   }
 
-  if (!is.null(sv)) {
+  # Case if given both SVs and CNVs
+  if (!is.null(sv) && !is.null(cnv)) {
     # some cases where no BNDs or other SVs PASS.
     if (nrow(svs_bnd) > 0) {
       OmicCircos::circos(R = 260, cir = circos_data$db, type = "link",
@@ -91,11 +92,26 @@ plot_circos <- function(sv = NULL, cnv = NULL) {
     }
   }
 
+  # Case if given only SVs
+  if (!is.null(sv) && is.null(cnv)) {
+    # some cases where no BNDs or other SVs PASS.
+    if (nrow(svs_bnd) > 0) {
+      OmicCircos::circos(R = 380, cir = circos_data$db, type = "link",
+                         W = 40, mapping = svs_bnd, lwd = 2,
+                         col = svs_bnd$col)
+    }
+    if (nrow(svs_other) > 0) {
+      OmicCircos::circos(R = 380, cir = circos_data$db, type = "link2",
+                         W = 20, mapping = svs_other, lwd = 1,
+                         col = svs_other$col)
+    }
+  }
+
 }
 
 ## Debugging
 #sv <- rock::prep_manta_vcf("/Users/pdiakumis/Desktop/projects/umccr/tothill_projects/data/a5/vcf/structural/E019-manta.vcf.gz")
 #cnv <- rock::prep_facets_seg("/Users/pdiakumis/Desktop/projects/umccr/tothill_projects/data/a5/facets/batch1/E019/E019_cval_150_fit.rds")
 #pdf("~/Desktop/tmp/circos2.pdf", width = 7, height = 7)
-#rock::plot_circos(sv = NULL, cnv = cnv)
+#plot_circos(sv = sv, cnv = NULL)
 #dev.off()
