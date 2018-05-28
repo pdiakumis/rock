@@ -21,7 +21,6 @@
 #' read_manta_vcf("/path/to/sample.manta.vcf.gz")
 #' }
 #'
-#' @export
 read_manta_vcf <- function(vcf) {
   stopifnot(file.exists(vcf), grepl("vcf.gz$", vcf))
 
@@ -30,17 +29,19 @@ read_manta_vcf <- function(vcf) {
   }
 
   if (system(paste0("bcftools view -h ",  vcf, " | grep 'BPI_START'"), ignore.stdout = TRUE) == 0) {
-    message(stamp(), " BPI has been run on this VCF. Using INFO/BPI_START and INFO/BPI_END for coordinates")
+    message("BPI has been run on this VCF. Using INFO/BPI_START and INFO/BPI_END for coordinates")
     bcftools_query_command <- "bcftools query -f '%CHROM\t%INFO/BPI_START\t%INFO/BPI_END\t%ID\t%INFO/MATEID\t%INFO/SVTYPE\t%FILTER\n'"
   } else {
-    message(stamp(), " BPI has not been run on this VCF. Using POS and INFO/END for coordinates")
+    message("BPI has not been run on this VCF. Using POS and INFO/END for coordinates")
     bcftools_query_command <- "bcftools query -f '%CHROM\t%POS\t%INFO/END\t%ID\t%INFO/MATEID\t%INFO/SVTYPE\t%FILTER\n'"
   }
 
 
   DF <- system(paste(bcftools_query_command, vcf), intern = TRUE) %>%
     tibble::tibble(all_cols = .) %>%
-    tidyr::separate(col = .data$all_cols, into = c("chrom1", "pos1", "pos2", "id", "mateid", "svtype", "filter"), sep = "\t", convert = TRUE) %>%
+    tidyr::separate(col = .data$all_cols,
+                    into = c("chrom1", "pos1", "pos2", "id", "mateid", "svtype", "filter"),
+                    sep = "\t", convert = TRUE) %>%
     dplyr::mutate(chrom1 = as.character(.data$chrom1))
 
 
@@ -56,7 +57,7 @@ read_manta_vcf <- function(vcf) {
 #' found in the R session via the PATH environmental variable.
 #'
 #' @param vcf Path to bgzipped Manta VCF file. Needs to have `vcf.gz` suffix.
-#' @param filter_pass Keep only variants nnotated with a PASS FILTER? (default: TRUE)
+#' @param filter_pass Keep only variants annotated with a PASS FILTER? (default: TRUE).
 #' @return A dataframe (`tibble`) with the following fields from the VCF:
 #'   * chrom1: `CHROM`
 #'   * pos1: `POS` | `INFO/BPI_START`
@@ -93,18 +94,18 @@ prep_manta_vcf <- function(vcf, filter_pass = TRUE) {
     dplyr::select(.data$chrom1, .data$pos1, .data$chrom2, .data$pos2, .data$id, .data$mateid, .data$svtype, .data$filter)
 
   # All together now
-  svs <- df_other %>%
+  sv <- df_other %>%
     dplyr::bind_rows(df_bnd)
 
   if (filter_pass) {
-    svs <- svs %>%
+    sv <- sv %>%
       dplyr::filter(.data$filter == "PASS")
   }
 
-  svs <- svs %>%
+  sv <- sv %>%
     dplyr::select(.data$chrom1, .data$pos1, .data$chrom2, .data$pos2, .data$svtype)
 
-  structure(list(svs = svs), class = "sv")
+  structure(list(sv = sv), class = "sv")
 }
 
 # Debugging
