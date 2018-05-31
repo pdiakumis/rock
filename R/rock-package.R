@@ -13,7 +13,3 @@
 #' @docType package
 #' @name rock-package
 NULL
-
-.onAttach <- function(libname, pkgname) {
-  packageStartupMessage("Rrrrrrr...!")
-}
