@@ -7,7 +7,7 @@
 read_manta_vcf(vcf)
 }
 \arguments{
-\item{vcf}{Path to bgzipped Manta VCF file. Needs to have \code{vcf.gz} suffix.}
+\item{vcf}{Path to Manta VCF file. Can be compressed or not.}
 }
 \value{
 A dataframe (\code{tibble}) with the following fields from the VCF:
@@ -25,7 +25,6 @@ A dataframe (\code{tibble}) with the following fields from the VCF:
 Read main columns of interest from Manta VCF using bcftools
 }
 \details{
-VCF needs to be bgzipped.
 Make sure bcftools has been installed and that it can be
 found in the R session via the PATH environmental variable.
 }

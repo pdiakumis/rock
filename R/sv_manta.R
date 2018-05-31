@@ -2,11 +2,10 @@
 #'
 #' Read main columns of interest from Manta VCF using bcftools
 #'
-#' VCF needs to be bgzipped.
 #' Make sure bcftools has been installed and that it can be
 #' found in the R session via the PATH environmental variable.
 #'
-#' @param vcf Path to bgzipped Manta VCF file. Needs to have `vcf.gz` suffix.
+#' @param vcf Path to Manta VCF file. Can be compressed or not.
 #' @return A dataframe (`tibble`) with the following fields from the VCF:
 #'   * chrom1: `CHROM`
 #'   * pos1: `POS` | `INFO/BPI_START`
@@ -22,7 +21,7 @@
 #' }
 #'
 read_manta_vcf <- function(vcf) {
-  stopifnot(file.exists(vcf), grepl("vcf.gz$", vcf))
+  stopifnot(file.exists(vcf))
 
   if (system("bcftools -v", ignore.stdout = TRUE) != 0) {
     stop("Oops, bcftools can't be found! Please install/add to PATH.")
@@ -57,7 +56,7 @@ read_manta_vcf <- function(vcf) {
 #' found in the R session via the PATH environmental variable.
 #'
 #' @param vcf Path to bgzipped Manta VCF file. Needs to have `vcf.gz` suffix.
-#' @param filter_pass Keep only variants annotated with a PASS FILTER? (default: TRUE).
+#' @param filter_pass Keep only variants annotated with a PASS FILTER? (default: FALSE).
 #' @return A dataframe (`tibble`) with the following fields from the VCF:
 #'   * chrom1: `CHROM`
 #'   * pos1: `POS` | `INFO/BPI_START`
@@ -71,7 +70,7 @@ read_manta_vcf <- function(vcf) {
 #' }
 #'
 #' @export
-prep_manta_vcf <- function(vcf, filter_pass = TRUE) {
+prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
 
   DF <- read_manta_vcf(vcf)
 

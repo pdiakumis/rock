@@ -113,7 +113,7 @@ plot_circos <- function(sv = NULL, cnv = NULL) {
 #sv <- rock::prep_manta_vcf("/Users/pdiakumis/Desktop/projects/umccr/tothill_projects/data/a5/vcf/structural/E019-manta.vcf.gz")
 #cnv_facets <- rock::prep_facets_seg("/Users/pdiakumis/Desktop/projects/umccr/tothill_projects/data/a5/facets/batch1/E019/E019_cval_150_fit.rds")
 #cnv_cnvkit <- rock::prep_cnvkit_seg("/Users/pdiakumis/Desktop/projects/umccr/tothill_projects/data/a5/structural/E019-cnvkit-call.cns")
-
+#
 #pdf("~/Desktop/tmp/circos2.pdf", width = 7, height = 7)
-#plot_circos(sv = sv, cnv = cnv_cnvkit)
+#rock::plot_circos(sv = sv, cnv = cnv_cnvkit)
 #dev.off()
