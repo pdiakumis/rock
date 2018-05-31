@@ -1,0 +1,46 @@
+---
+title: "Introduction to rock"
+author: "Peter Diakumis"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r include=FALSE, message=FALSE}
+require(rock)
+```
+
+## Hello
+
+Let's use the `hello` function:
+
+```{r}
+x <- c("Foo", "Bar", "Baz")
+hello(x)
+```
+
+## Circos Plots
+
+```{r circos-prep}
+print("foo")
+#sv <- rock::prep_manta_vcf("/Users/pdiakumis/Desktop/projects/umccr/tothill_projects/data/a5/vcf/structural/E019-manta.vcf.gz")
+#cnv_facets <- rock::prep_facets_seg("/Users/pdiakumis/Desktop/projects/umccr/tothill_projects/data/a5/facets/batch1/E019/E019_cval_150_fit.rds")
+#cnv_cnvkit <- rock::prep_cnvkit_seg("/Users/pdiakumis/Desktop/projects/umccr/tothill_projects/data/a5/structural/E019-cnvkit-call.cns")
+```
+
+```{r circos-plot}
+print("foo")
+#rock::plot_circos(sv = sv, cnv = cnv_cnvkit)
+#rock::plot_circos(sv = sv, cnv = cnv_facets)
+```
+
