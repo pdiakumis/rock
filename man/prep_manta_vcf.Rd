@@ -30,8 +30,7 @@ Make sure bcftools has been installed and that it can be
 found in the R session via the PATH environmental variable.
 }
 \examples{
-\dontrun{
-prep_manta_vcf("/path/to/sample.vcf.gz")
-}
+vcf <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
+prep_manta_vcf(vcf)
 
 }

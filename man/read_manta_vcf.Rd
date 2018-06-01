@@ -29,8 +29,7 @@ Make sure bcftools has been installed and that it can be
 found in the R session via the PATH environmental variable.
 }
 \examples{
-\dontrun{
-read_manta_vcf("/path/to/sample.manta.vcf.gz")
-}
+vcf <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
+rock:::read_manta_vcf(vcf)
 
 }

@@ -23,7 +23,7 @@ Reads the \code{sample-call.cns} file output by CNVkit and exports the
 CNV segment coordinates.
 }
 \examples{
-\dontrun{
-prep_cnvkit_seg("/path/to/sample.cnvkit_call.cns")
-}
+cn <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
+prep_cnvkit_seg(cn)
+
 }

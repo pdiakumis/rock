@@ -16,17 +16,13 @@
 #'
 #' @export
 prep_facets_seg <- function(facets) {
+
   stopifnot(file.exists(facets))
-  col_nms <- c("chrom", "seg", "num.mark", "nhet", "cnlr.median",
-               "mafR", "segclust", "cnlr.median.clust", "mafR.clust",
-               "start", "end", "cf.em", "tcn.em", "lcn.em")
 
-  cnv <- readr::read_tsv(facets, col_types = "cddddddddddddd")
-  stopifnot(all(colnames(cnv) == col_nms))
-
-  cnv <- cnv %>%
+  cnv <- readr::read_tsv(facets, col_types = "cddddddddddddd") %>%
     dplyr::select(.data$chrom, .data$start, .data$end, .data$tcn.em) %>%
     dplyr::rename(tot_cn = .data$tcn.em)
+
   structure(list(cnv = cnv), class = "cnv")
 
 }

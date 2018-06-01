@@ -7,7 +7,7 @@
 prep_facets_seg(facets)
 }
 \arguments{
-\item{facets}{Path to FACETS \code{emcncf} object.}
+\item{facets}{Path to FACETS \code{emcncf} text file.}
 }
 \value{
 A dataframe (\code{tibble}) with the following columns:
@@ -23,7 +23,7 @@ Reads the output by the FACETS \code{emcncf} function and exports the \code{cncf
 CNV segment coordinates.
 }
 \examples{
-\dontrun{
-prep_facets_seg("/path/to/sample.facets_emcncf.rds")
-}
+cn <- system.file("extdata", "HCC2218_facets_cncf.tsv", package = "pebbles")
+prep_facets_seg(cn)
+
 }
