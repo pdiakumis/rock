@@ -25,8 +25,8 @@ plot_circos <- function(sv = NULL, cnv = NULL) {
               (!is.null(cnv) && class(cnv) == "cnv"))
 
   # Prepare angles + colors
-  chr_colors <- grDevices::rainbow(circos_data$seg_num, alpha = 0.5) %>%
-    rlang::set_names(circos_data$seg_name)
+  chr_colors <- grDevices::rainbow(pebbles::circos_data$seg_num, alpha = 0.5) %>%
+    rlang::set_names(pebbles::circos_data$seg_name)
 
   #---- SV data ----#
   # var1, var2 just dummy vars for OmicCircos
@@ -69,10 +69,10 @@ plot_circos <- function(sv = NULL, cnv = NULL) {
   graphics::par(mar = c(.5, .5, .5, .5))
   graphics::plot(c(1, 800), c(1, 800), type = "n", axes = FALSE, xlab = "", ylab = "", main = "")
 
-  OmicCircos::circos(R = 400, cir = circos_data$db, type = "chr",
+  OmicCircos::circos(R = 400, cir = pebbles::circos_data$db, type = "chr",
                      col = chr_colors, print.chr.lab = TRUE, W = 4)
   if (!is.null(cnv)) {
-    OmicCircos::circos(R = 260, cir = circos_data$db, type = "arc",
+    OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type = "arc",
                        W = 120, mapping = cnv, col.v = 4, B = TRUE, lwd = 5,
                        col = cnv$col, scale = FALSE)
   }
@@ -81,12 +81,12 @@ plot_circos <- function(sv = NULL, cnv = NULL) {
   if (!is.null(sv) && !is.null(cnv)) {
     # some cases where no BNDs or other SVs PASS.
     if (nrow(svs_bnd) > 0) {
-      OmicCircos::circos(R = 260, cir = circos_data$db, type = "link",
+      OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type = "link",
                          W = 40, mapping = svs_bnd, lwd = 2,
                          col = svs_bnd$col)
     }
     if (nrow(svs_other) > 0) {
-      OmicCircos::circos(R = 260, cir = circos_data$db, type = "link2",
+      OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type = "link2",
                          W = 20, mapping = svs_other, lwd = 1,
                          col = svs_other$col)
     }
@@ -96,12 +96,12 @@ plot_circos <- function(sv = NULL, cnv = NULL) {
   if (!is.null(sv) && is.null(cnv)) {
     # some cases where no BNDs or other SVs PASS.
     if (nrow(svs_bnd) > 0) {
-      OmicCircos::circos(R = 380, cir = circos_data$db, type = "link",
+      OmicCircos::circos(R = 380, cir = pebbles::circos_data$db, type = "link",
                          W = 40, mapping = svs_bnd, lwd = 2,
                          col = svs_bnd$col)
     }
     if (nrow(svs_other) > 0) {
-      OmicCircos::circos(R = 380, cir = circos_data$db, type = "link2",
+      OmicCircos::circos(R = 380, cir = pebbles::circos_data$db, type = "link2",
                          W = 20, mapping = svs_other, lwd = 1,
                          col = svs_other$col)
     }
