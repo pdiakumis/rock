@@ -16,9 +16,8 @@
 #'   * filter: `FILTER`
 #'
 #' @examples
-#' \dontrun{
-#' read_manta_vcf("/path/to/sample.manta.vcf.gz")
-#' }
+#' vcf <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
+#' rock:::read_manta_vcf(vcf)
 #'
 read_manta_vcf <- function(vcf) {
   stopifnot(file.exists(vcf))
@@ -65,9 +64,8 @@ read_manta_vcf <- function(vcf) {
 #'   * svtype: `INFO/SVTYPE`. Used for plotting.
 #'
 #' @examples
-#' \dontrun{
-#' prep_manta_vcf("/path/to/sample.vcf.gz")
-#' }
+#' vcf <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
+#' prep_manta_vcf(vcf)
 #'
 #' @export
 prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
@@ -107,6 +105,3 @@ prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
   structure(list(sv = sv), class = "sv")
 }
 
-# Debugging
-# vcf <- "/Users/pdiakumis/Desktop/projects/umccr/tothill_projects/data/a5/vcf/structural/E019-manta.vcf.gz"
-# prep_manta_vcf(vcf)
