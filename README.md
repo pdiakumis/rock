@@ -9,6 +9,11 @@ status](https://codecov.io/gh/umccr/rock/branch/master/graph/badge.svg)](https:/
 `rock` is an R package that (hopefully) helps with the day to day
 bioinformatics life at UMCCR (UniMelb Centre for Cancer Research).
 
+You can do the following:
+
+  - Create circos plots using structural variant calls from Manta, and
+    copy number variant calls from FACETS or CNVkit.
+
 ## Installation
 
 You can install the development version of `rock` from
@@ -21,9 +26,12 @@ devtools::install_github("umccr/rock@v1.2.3") # release v1.2.3
 devtools::install_github("umccr/rock@abcd") # commit abcd
 ```
 
+There is no CRAN or conda version (yet).
+
 ## Circos Plots
 
-  - We can generate circos plots using the
+  - We can generate circos plots using the functionality available in
+    the
     [OmicCircos](https://bioconductor.org/packages/release/bioc/html/OmicCircos.html)
     Bioconductor R package.
 
@@ -48,7 +56,17 @@ cn_cnvkit <- prep_cnvkit_seg(cnvkit)
 ```
 
   - Now we can generate a circos plot with Manta links and FACETS/CNVkit
-    segments:
+    segments.
+      - For the internal lines:
+          - The \_inter\_chromosomal links take the chromosome colour of
+            mate1 of each breakend pair.
+          - The \_intra\_chromosomal lines are coloured according to the
+            variant type:
+              - Deletions: Red
+              - Duplications: Green
+              - Insertions: Purple
+              - Inversions:
+Orange
 
 <!-- end list -->
 
