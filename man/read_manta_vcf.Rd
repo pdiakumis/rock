@@ -25,8 +25,14 @@ A dataframe (\code{tibble}) with the following fields from the VCF:
 Read main columns of interest from Manta VCF using bcftools
 }
 \details{
-Make sure bcftools has been installed and that it can be
-found in the R session via the PATH environmental variable.
+This function uses vcfR (https://github.com/knausb/vcfR) or
+bcftools (https://samtools.github.io/bcftools/bcftools.html) to read in the VCF file.
+If you've got a large VCF file, or one with humongous gene annotations,
+vcfR  will probably choke. A much quicker alternative is bcftools, but you need
+to make sure it has been installed and that it can be found in the R session
+via the PATH environmental variable. If you're an RStudio user, you can make
+sure it recognises the user's PATH by opening the RStudio app via the terminal,
+or perhaps following the suggestions here: https://stackoverflow.com/questions/31121645.
 }
 \examples{
 vcf <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")

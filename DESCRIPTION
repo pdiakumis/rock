@@ -23,6 +23,7 @@ Imports:
     rlang (>= 0.1.2),
     tibble,
     tidyr,
+    vcfR
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.0.1
 Suggests: 

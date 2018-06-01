@@ -2,8 +2,15 @@
 #'
 #' Read main columns of interest from Manta VCF using bcftools
 #'
-#' Make sure bcftools has been installed and that it can be
-#' found in the R session via the PATH environmental variable.
+#' This function uses vcfR (https://github.com/knausb/vcfR) or
+#' bcftools (https://samtools.github.io/bcftools/bcftools.html) to read in the VCF file.
+#' If you've got a large VCF file, or one with humongous gene annotations,
+#' vcfR  will probably choke. A much quicker alternative is bcftools, but you need
+#' to make sure it has been installed and that it can be found in the R session
+#' via the PATH environmental variable. If you're an RStudio user, you can make
+#' sure it recognises the user's PATH by opening the RStudio app via the terminal,
+#' or perhaps following the suggestions here: https://stackoverflow.com/questions/31121645.
+#'
 #'
 #' @param vcf Path to Manta VCF file. Can be compressed or not.
 #' @return A dataframe (`tibble`) with the following fields from the VCF:
@@ -20,28 +27,54 @@
 #' rock:::read_manta_vcf(vcf)
 #'
 read_manta_vcf <- function(vcf) {
+
   stopifnot(file.exists(vcf))
 
-  if (system("bcftools -v", ignore.stdout = TRUE) != 0) {
-    stop("Oops, bcftools can't be found! Please install/add to PATH.")
-  }
+  # You have two options: use bcftools or vcfR
+  # - If bcftools exists, use it
+  # - If bcftools doesn't exist, use vcfR
+  if (Sys.which("bcftools") == "") {
+    # use vcfR
+    vcfr <- vcfR::read.vcfR(vcf, verbose = FALSE)
+    DF <- tibble::tibble(chrom1 = as.character(vcfR::getCHROM(vcfr)),
+                         pos1 = "dummy1",
+                         pos2 = "dummy2",
+                         id = vcfR::getID(vcfr),
+                         mateid = vcfR::extract.info(vcfr, "MATEID"),
+                         svtype = vcfR::extract.info(vcfr, "SVTYPE"),
+                         filter = vcfR::getFILTER(vcfr))
 
-  if (system(paste0("bcftools view -h ",  vcf, " | grep 'BPI_START'"), ignore.stdout = TRUE) == 0) {
-    message("BPI has been run on this VCF. Using INFO/BPI_START and INFO/BPI_END for coordinates")
-    bcftools_query_command <- "bcftools query -f '%CHROM\t%INFO/BPI_START\t%INFO/BPI_END\t%ID\t%INFO/MATEID\t%INFO/SVTYPE\t%FILTER\n'"
+    if (any(grepl("BPI_START", vcfr@meta))) {
+      # use BPI fields
+      DF <- dplyr::mutate(DF,
+                          pos1 = as.integer(vcfR::extract.info(vcfr, "BPI_START")),
+                          pos2 = as.integer(vcfR::extract.info(vcfr, "BPI_END"))
+      )
+    } else {
+      # use typical fields
+      DF <- dplyr::mutate(DF,
+                          pos1 = as.integer(vcfR::getPOS(vcfr)),
+                          pos2 = as.integer(vcfR::extract.info(vcfr, "END")))
+    }
+
   } else {
-    message("BPI has not been run on this VCF. Using POS and INFO/END for coordinates")
-    bcftools_query_command <- "bcftools query -f '%CHROM\t%POS\t%INFO/END\t%ID\t%INFO/MATEID\t%INFO/SVTYPE\t%FILTER\n'"
+    # use bcftools
+    if (system(paste0("bcftools view -h ",  vcf, " | grep 'BPI_START'"), ignore.stdout = TRUE) == 0) {
+      # use BPI fields
+      bcftools_query <- "bcftools query -f '%CHROM\t%INFO/BPI_START\t%INFO/BPI_END\t%ID\t%INFO/MATEID\t%INFO/SVTYPE\t%FILTER\n'"
+    } else {
+      # use typical fields
+      bcftools_query <- "bcftools query -f '%CHROM\t%POS\t%INFO/END\t%ID\t%INFO/MATEID\t%INFO/SVTYPE\t%FILTER\n'"
+    }
+
+    DF <- system(paste(bcftools_query, vcf), intern = TRUE) %>%
+      tibble::tibble(all_cols = .) %>%
+      tidyr::separate(col = .data$all_cols,
+                      into = c("chrom1", "pos1", "pos2", "id", "mateid", "svtype", "filter"),
+                      sep = "\t", convert = TRUE) %>%
+      dplyr::mutate(chrom1 = as.character(.data$chrom1))
+
   }
-
-
-  DF <- system(paste(bcftools_query_command, vcf), intern = TRUE) %>%
-    tibble::tibble(all_cols = .) %>%
-    tidyr::separate(col = .data$all_cols,
-                    into = c("chrom1", "pos1", "pos2", "id", "mateid", "svtype", "filter"),
-                    sep = "\t", convert = TRUE) %>%
-    dplyr::mutate(chrom1 = as.character(.data$chrom1))
-
 
   return(DF)
 }
