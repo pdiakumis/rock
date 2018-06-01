@@ -21,7 +21,8 @@ prep_facets_seg <- function(facets) {
 
   cnv <- readr::read_tsv(facets, col_types = "cddddddddddddd") %>%
     dplyr::select(.data$chrom, .data$start, .data$end, .data$tcn.em) %>%
-    dplyr::rename(tot_cn = .data$tcn.em)
+    dplyr::rename(tot_cn = .data$tcn.em) %>%
+    dplyr::filter(.data$chrom != "MT") # ignore mito CNVs
 
   structure(list(cnv = cnv), class = "cnv")
 
