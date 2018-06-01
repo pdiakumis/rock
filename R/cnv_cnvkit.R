@@ -11,21 +11,20 @@
 #'   * tot_cn: total copy number estimate
 #'
 #' @examples
-#' \dontrun{
-#' prep_cnvkit_seg("/path/to/sample.cnvkit_call.cns")
-#' }
+#' cn <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
+#' prep_cnvkit_seg(cn)
+#'
 #' @export
 prep_cnvkit_seg <- function(cnvkit) {
-  stopifnot(file.exists(cnvkit), grepl("call.cns$", cnvkit))
+
+  stopifnot(file.exists(cnvkit))
 
   cnv <- readr::read_tsv(cnvkit, col_types = "ciicdddddddd") %>%
     dplyr::select(.data$chromosome, .data$start, .data$end, .data$cn) %>%
     dplyr::rename(tot_cn = .data$cn,
-                  chrom = .data$chromosome)
+                  chrom = .data$chromosome) %>%
+    dplyr::filter(.data$chrom != "MT") # ignore mito CNVs
 
   structure(list(cnv = cnv), class = "cnv")
 
 }
-
-# for debugging
-#cnvkit <- "/Users/pdiakumis/Desktop/projects/umccr/tothill_projects/data/a5/structural/E019-cnvkit-call.cns"
