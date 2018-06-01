@@ -5,6 +5,7 @@ Description: Contains functions for bioinformatic analyses.
 Authors@R: person("Peter", "Diakumis", email = "peterdiakumis@gmail.com", role = c("aut", "cre"))
 URL: https://github.com/umccr/rock
 BugReports: https://github.com/umccr/rock/issues
+Additional_repositories: https://github.com/umccr/pebbles.git
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -26,6 +27,7 @@ RoxygenNote: 6.0.1
 Suggests: 
     covr,
     knitr,
+    pebbles,
     rmarkdown,
     testthat,
 VignetteBuilder: knitr
