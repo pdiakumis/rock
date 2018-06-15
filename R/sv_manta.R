@@ -75,7 +75,6 @@ read_manta_vcf <- function(vcf) {
       dplyr::mutate(chrom1 = as.character(.data$chrom1))
 
   }
-
   return(DF)
 }
 
@@ -112,7 +111,7 @@ prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
 
   # BNDs
   # We have POS of mate2 through INFO/END or INFO/BPI_END, just need CHROM.
-  # Just keep first BND mates (i.e. discard duplicated information)
+  # Just keep BND mate with index 1 (i.e. discard duplicated information)
   # see <https://github.com/Illumina/manta/blob/master/docs/developerGuide/ID.md>
   df_bnd <- DF %>%
     dplyr::filter(.data$svtype == "BND") %>%
@@ -121,6 +120,8 @@ prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
     dplyr::mutate(bndid = substring(.data$id, nchar(.data$id))) %>%
     dplyr::filter(.data$bndid == "1") %>%
     dplyr::select(.data$chrom1, .data$pos1, .data$chrom2, .data$pos2, .data$id, .data$mateid, .data$svtype, .data$filter)
+
+  stopifnot(manta_proper_pairs(df_bnd$id, df_bnd$mateid))
 
   # Non-BNDs
   df_other <- DF %>%
@@ -142,4 +143,20 @@ prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
 
   structure(list(sv = sv), class = "sv")
 }
+
+
+# Check if Manta BND mates are properly paired
+manta_proper_pairs <- function(id, mid) {
+  ext1 <- substring(id, nchar(id))
+  ext2 <- substring(mid, nchar(mid))
+  pre1 <- substring(id, 1, nchar(id) - 1)
+  pre2 <- substring(mid, 1, nchar(mid) - 1)
+
+  # id should end in 1; mateid in 0
+  if (all(ext1 == "1") & all(ext2 == "0") & all(pre1 == pre2)) {
+    return(TRUE)
+  }
+  return(FALSE)
+}
+
 
