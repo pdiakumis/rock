@@ -121,7 +121,7 @@ prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
     dplyr::filter(.data$bndid == "1") %>%
     dplyr::select(.data$chrom1, .data$pos1, .data$chrom2, .data$pos2, .data$id, .data$mateid, .data$svtype, .data$filter)
 
-  stopifnot(manta_proper_pairs(df_bnd$id, df_bnd$mateid))
+  stopifnot(.manta_proper_pairs(df_bnd$id, df_bnd$mateid))
 
   # Non-BNDs
   df_other <- DF %>%
@@ -146,7 +146,7 @@ prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
 
 
 # Check if Manta BND mates are properly paired
-manta_proper_pairs <- function(id, mid) {
+.manta_proper_pairs <- function(id, mid) {
   ext1 <- substring(id, nchar(id))
   ext2 <- substring(mid, nchar(mid))
   pre1 <- substring(id, 1, nchar(id) - 1)

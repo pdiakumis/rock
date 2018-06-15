@@ -23,7 +23,7 @@ prep_cnvkit_seg <- function(cnvkit) {
     dplyr::select(.data$chromosome, .data$start, .data$end, .data$cn) %>%
     dplyr::rename(tot_cn = .data$cn,
                   chrom = .data$chromosome) %>%
-    dplyr::filter(.data$chrom != "MT") # ignore mito CNVs
+    dplyr::filter(.data$chrom != "MT")
 
   structure(list(cnv = cnv), class = "cnv")
 
