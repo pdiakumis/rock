@@ -28,6 +28,12 @@ devtools::install_github("umccr/rock@abcd") # commit abcd
 
 There is no CRAN or conda version (yet).
 
+Then just load with:
+
+``` r
+require(rock)
+```
+
 ## Circos Plots
 
   - We can generate circos plots using the functionality available in
@@ -35,14 +41,8 @@ There is no CRAN or conda version (yet).
     [OmicCircos](https://bioconductor.org/packages/release/bioc/html/OmicCircos.html)
     Bioconductor R package.
 
-<!-- end list -->
-
-``` r
-library(rock)
-```
-
   - Start by preparing the SV and CNV
-calls:
+calls.
 
 <!-- end list -->
 
@@ -50,34 +50,66 @@ calls:
 manta <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
 cnvkit <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
 facets <- system.file("extdata", "HCC2218_facets_cncf.tsv", package = "pebbles")
+titan <- system.file("extdata", "HCC2218_titan.segs.tsv", package = "pebbles")
+
 sv_manta <- prep_manta_vcf(manta)
 cn_facets <- prep_facets_seg(facets)
 cn_cnvkit <- prep_cnvkit_seg(cnvkit)
+cn_titan <- prep_titan_seg(titan)
 ```
 
-  - Now we can generate a circos plot with Manta links and FACETS/CNVkit
-    segments.
-      - For the internal lines:
-          - The \_inter\_chromosomal links take the chromosome colour of
-            mate1 of each breakend pair.
-          - The \_intra\_chromosomal lines are coloured according to the
-            variant type:
-              - Deletions: Red
-              - Duplications: Green
-              - Insertions: Purple
-              - Inversions:
-Orange
+  - Now we can generate a circos plot with Manta links and
+    FACETS/CNVkit/TitanCNA segments (note that the `Warning` message
+    below is due to a hack used in the OmicCircos code, where a matrix
+    with numbers and characters is coerced to numeric. Just don’t worry
+    about it..):
 
-<!-- end list -->
+  - For the internal lines:
+    
+      - The \_inter\_chromosomal links take the chromosome colour of
+        mate1 of each breakend pair.
+      - The \_intra\_chromosomal lines are coloured according to the
+        variant type:
+          - Deletions: Red
+          - Duplications: Green
+          - Insertions: Purple
+          - Inversions: Orange
+
+### Manta with CNVkit
 
 ``` r
 plot_circos(sv = sv_manta, cnv = cn_cnvkit)
+#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
+#> = "arc", : NAs introduced by coercion
+
+#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
+#> = "arc", : NAs introduced by coercion
 ```
 
 <img src="man/figures/README-circos-plot-manta-cnvkit-1.png" width="100%" />
 
+### Manta with FACETS
+
 ``` r
 plot_circos(sv = sv_manta, cnv = cn_facets)
+#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
+#> = "arc", : NAs introduced by coercion
+
+#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
+#> = "arc", : NAs introduced by coercion
 ```
 
 <img src="man/figures/README-circos-plot-manta-facets-1.png" width="100%" />
+
+### Manta with TitanCNA
+
+``` r
+plot_circos(sv = sv_manta, cnv = cn_titan)
+#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
+#> = "arc", : NAs introduced by coercion
+
+#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
+#> = "arc", : NAs introduced by coercion
+```
+
+<img src="man/figures/README-circos-plot-manta-titan-1.png" width="100%" />
