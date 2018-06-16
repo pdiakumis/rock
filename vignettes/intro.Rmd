@@ -31,29 +31,39 @@ hello(x)
 
 ## Circos Plots
 
-* Start by preparing the SV and CNV calls. Note that `prep_manta_vcf` requires
-  [bcftools](https://samtools.github.io/bcftools/bcftools.html) to be in
-  your PATH. If you are using RStudio, your PATH can be read if you open
-  RStudio (or an RMarkdown/R script) from the terminal.
+* Start by preparing the SV and CNV calls.
 
 ```{r circos-prep, message=FALSE}
 manta <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
 cnvkit <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
 facets <- system.file("extdata", "HCC2218_facets_cncf.tsv", package = "pebbles")
+titan <- system.file("extdata", "HCC2218_titan.segs.tsv", package = "pebbles")
+
 sv_manta <- prep_manta_vcf(manta)
 cn_facets <- prep_facets_seg(facets)
 cn_cnvkit <- prep_cnvkit_seg(cnvkit)
+cn_titan <- prep_titan_seg(titan)
 ```
 
-* Now we can generate a circos plot with Manta links and FACETS/CNVkit segments
+* Now we can generate a circos plot with Manta links and FACETS/CNVkit/TitanCNA segments
   (note that the `Warning` message below is due to a hack used in the OmicCircos
   code, where a matrix with numbers and characters is coerced to numeric.
   Just don't worry about it..):
+
+### Manta with CNVkit
 
 ```{r circos-plot-manta-cnvkit, fig.width=8, fig.height=8}
 plot_circos(sv = sv_manta, cnv = cn_cnvkit)
 ```
 
+### Manta with FACETS
+
 ```{r circos-plot-manta-facets, fig.width=8, fig.height=8}
 plot_circos(sv = sv_manta, cnv = cn_facets)
+```
+
+### Manta with TitanCNA
+
+```{r circos-plot-manta-titan, fig.width=8, fig.height=8}
+plot_circos(sv = sv_manta, cnv = cn_titan)
 ```
