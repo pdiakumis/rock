@@ -51,18 +51,20 @@ manta <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
 cnvkit <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
 facets <- system.file("extdata", "HCC2218_facets_cncf.tsv", package = "pebbles")
 titan <- system.file("extdata", "HCC2218_titan.segs.tsv", package = "pebbles")
+purple <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
 
 sv_manta <- prep_manta_vcf(manta)
 cn_facets <- prep_facets_seg(facets)
 cn_cnvkit <- prep_cnvkit_seg(cnvkit)
 cn_titan <- prep_titan_seg(titan)
+cn_purple <- prep_purple_seg(purple)
 ```
 
   - Now we can generate a circos plot with Manta links and
-    FACETS/CNVkit/TitanCNA segments (note that the `Warning` message
-    below is due to a hack used in the OmicCircos code, where a matrix
-    with numbers and characters is coerced to numeric. Just don’t worry
-    about it..):
+    FACETS/CNVkit/TitanCNA/PURPLE segments (note that the `Warning`
+    message below is due to a hack used in the OmicCircos code, where a
+    matrix with numbers and characters is coerced to numeric. Just don’t
+    worry about it..):
 
   - For the internal lines:
     
@@ -74,6 +76,19 @@ cn_titan <- prep_titan_seg(titan)
           - Duplications: Green
           - Insertions: Purple
           - Inversions: Orange
+
+### Manta with PURPLE
+
+``` r
+plot_circos(sv = sv_manta, cnv = cn_purple)
+#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
+#> = "arc", : NAs introduced by coercion
+
+#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
+#> = "arc", : NAs introduced by coercion
+```
+
+<img src="man/figures/README-circos-plot-manta-purple-1.png" width="100%" />
 
 ### Manta with CNVkit
 

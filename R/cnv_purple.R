@@ -19,7 +19,8 @@ prep_purple_seg <- function(purple) {
 
   cnv <- read_purple_seg(purple) %>%
     dplyr::select(.data$chrom, .data$start, .data$end, .data$tot_cn) %>%
-    dplyr::filter(.data$chrom != "MT")
+    dplyr::filter(.data$chrom != "MT") %>%
+    dplyr::mutate(tot_cn = round(tot_cn, digits = 0))
 
   structure(list(cnv = cnv), class = "cnv")
 }

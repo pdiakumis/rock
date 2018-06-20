@@ -67,3 +67,9 @@ plot_circos(sv = sv_manta, cnv = cn_facets)
 ```{r circos-plot-manta-titan, fig.width=8, fig.height=8}
 plot_circos(sv = sv_manta, cnv = cn_titan)
 ```
+
+### Manta with PURPLE
+
+```{r circos-plot-manta-purple, fig.width=8, fig.height=8}
+plot_circos(sv = sv_manta, cnv = cn_purple)
+```
