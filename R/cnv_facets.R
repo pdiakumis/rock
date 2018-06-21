@@ -22,7 +22,10 @@ prep_facets_seg <- function(facets) {
   cnv <- readr::read_tsv(facets, col_types = "cddddddddddddd") %>%
     dplyr::select(.data$chrom, .data$start, .data$end, .data$tcn.em) %>%
     dplyr::rename(tot_cn = .data$tcn.em) %>%
-    dplyr::filter(.data$chrom != "MT") # ignore mito CNVs
+    dplyr::filter(.data$chrom != "MT") %>%
+    dplyr::mutate(chrom = dplyr::case_when(
+      .data$chrom == "23" ~ "X",
+      TRUE ~ .data$chrom))
 
   structure(list(cnv = cnv), class = "cnv")
 
