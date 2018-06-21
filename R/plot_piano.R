@@ -35,13 +35,13 @@ plot_piano <- function(cnv_list) {
   p <- multicnv %>%
     dplyr::mutate(chrom = factor(.data$chrom, levels = c(1:22, "X", "Y")))
 
-  start <- rlang::quo(start)
-  end <- rlang::quo(end)
-  y1 <- rlang::quo(y1)
-  y2 <- rlang::quo(y2)
-  col <- rlang::quo(col)
-  var <- rlang::quo(var)
-  chrom <- rlang::quo(chrom)
+  start <- quo(start)
+  end <- quo(end)
+  y1 <- quo(y1)
+  y2 <- quo(y2)
+  col <- quo(col)
+  var <- quo(var)
+  chrom <- quo(chrom)
 
     ggplot2::ggplot(p) +
     ggplot2::geom_rect(ggplot2::aes(xmin = !!start, xmax = !!end,

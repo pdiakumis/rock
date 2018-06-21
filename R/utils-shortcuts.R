@@ -20,8 +20,8 @@ NULL
 #'
 #' @name tidyeval
 #' @keywords internal
-#' @aliases          quo quos enquo sym syms ensym expr exprs enexpr quo_name
-#' @importFrom rlang quo quos enquo sym syms ensym expr exprs enexpr quo_name
-#' @export           quo quos enquo sym syms ensym expr exprs enexpr quo_name
-#' @importFrom rlang UQ UQS .data :=
+#' @aliases          quo enquo
+#' @importFrom rlang quo enquo
+#' @export           quo enquo
+#' @importFrom rlang .data
 NULL
