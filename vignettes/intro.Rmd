@@ -38,11 +38,13 @@ manta <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
 cnvkit <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
 facets <- system.file("extdata", "HCC2218_facets_cncf.tsv", package = "pebbles")
 titan <- system.file("extdata", "HCC2218_titan.segs.tsv", package = "pebbles")
+purple <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
 
 sv_manta <- prep_manta_vcf(manta)
 cn_facets <- prep_facets_seg(facets)
 cn_cnvkit <- prep_cnvkit_seg(cnvkit)
 cn_titan <- prep_titan_seg(titan)
+cn_purple <- prep_purple_seg(purple)
 ```
 
 * Now we can generate a circos plot with Manta links and FACETS/CNVkit/TitanCNA segments
@@ -73,3 +75,14 @@ plot_circos(sv = sv_manta, cnv = cn_titan)
 ```{r circos-plot-manta-purple, fig.width=8, fig.height=8}
 plot_circos(sv = sv_manta, cnv = cn_purple)
 ```
+
+## Piano Plots
+
+* We can generate 'piano' plots to compare CNV calls from multiple
+  callers or samples.
+  
+```{r piano-plot-cnvkit-facets-purple-titan1, fig.width=8, fig.height=7}
+plot_piano(list(cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan))
+```
+  
+  
