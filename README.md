@@ -12,7 +12,26 @@ bioinformatics life at UMCCR (UniMelb Centre for Cancer Research).
 You can do the following:
 
   - Create circos plots using structural variant calls from Manta, and
-    copy number variant calls from FACETS or CNVkit.
+    copy number variant calls from FACETS or CNVkit. The OmicCircos R
+    package is used.
+
+  - Create CNV profiles in horizontal facets for multiple samples or
+    callers (piano plots)
+
+## Contents
+
+
+<!-- vim-markdown-toc GFM -->
+
+* [Installation](#installation)
+* [Circos Plots](#circos-plots)
+    * [Manta with PURPLE](#manta-with-purple)
+    * [Manta with CNVkit](#manta-with-cnvkit)
+    * [Manta with FACETS](#manta-with-facets)
+    * [Manta with TitanCNA](#manta-with-titancna)
+* [Piano Plots](#piano-plots)
+
+<!-- vim-markdown-toc -->
 
 ## Installation
 
@@ -128,3 +147,17 @@ plot_circos(sv = sv_manta, cnv = cn_titan)
 ```
 
 <img src="man/figures/README-circos-plot-manta-titan-1.png" width="100%" />
+
+## Piano Plots
+
+  - We can generate ‘piano’ plots to compare CNV calls from multiple
+    callers or
+samples.
+
+<!-- end list -->
+
+``` r
+plot_piano(list(cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan))
+```
+
+<img src="man/figures/README-piano-plot-cnvkit-facets-purple-titan1-1.png" width="100%" />
