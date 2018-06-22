@@ -3,15 +3,7 @@
 \name{tidyeval}
 \alias{tidyeval}
 \alias{quo}
-\alias{quos}
 \alias{enquo}
-\alias{sym}
-\alias{syms}
-\alias{ensym}
-\alias{expr}
-\alias{exprs}
-\alias{enexpr}
-\alias{quo_name}
 \title{Tidy eval helpers}
 \description{
 These functions provide tidy eval-compatible ways to capture
