@@ -14,16 +14,22 @@ knitr::opts_chunk$set(
 Rocking R at UMCCR
 ==================
 
-[![Travis build status](https://travis-ci.org/umccr/rock.svg?branch=master)](https://travis-ci.org/umccr/rock)
-[![Coverage status](https://codecov.io/gh/umccr/rock/branch/master/graph/badge.svg)](https://codecov.io/github/umccr/rock?branch=master)
+<!-- [![Travis build status](https://travis-ci.org/umccr/rock.svg?branch=master)](https://travis-ci.org/umccr/rock) -->
+<!-- [![Coverage status](https://codecov.io/gh/umccr/rock/branch/master/graph/badge.svg)](https://codecov.io/github/umccr/rock?branch=master) -->
 
 `rock` is an R package that (hopefully) helps with the day to day bioinformatics
 life at UMCCR (UniMelb Centre for Cancer Research).
 
 You can do the following:
 
-* Create circos plots using structural variant calls from Manta, and copy number variant calls
-  from FACETS or CNVkit. The OmicCircos R package is used.
+* Create circos plots using structural variant calls from
+  [Manta](https://github.com/Illumina/manta),
+  and copy number variant calls from
+  [CNVkit](https://github.com/etal/cnvkit),
+  [FACETS](https://github.com/mskcc/facets),
+  [TitanCNA](https://github.com/gavinha/TitanCNA) or
+  [PURPLE](https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator).
+  The OmicCircos R package is used.
 
 * Create CNV profiles in horizontal facets for multiple samples or callers (piano plots)
 
@@ -75,7 +81,7 @@ cn_purple <- prep_purple_seg(purple)
   (note that the `Warning` message below is due to a hack used in the OmicCircos
   code, where a matrix with numbers and characters is coerced to numeric.
   Just don't worry about it..):
-  
+
 * For the internal lines:
     - The _inter_chromosomal links take the chromosome colour of mate1 of each breakend pair.
     - The _intra_chromosomal lines are coloured according to the variant type:
@@ -83,12 +89,7 @@ cn_purple <- prep_purple_seg(purple)
         - Duplications: Green
         - Insertions: Purple
         - Inversions: Orange
-        
-### Manta with PURPLE
 
-```{r circos-plot-manta-purple, fig.width=8, fig.height=8}
-plot_circos(sv = sv_manta, cnv = cn_purple)
-```
 
 ### Manta with CNVkit
 
@@ -108,6 +109,11 @@ plot_circos(sv = sv_manta, cnv = cn_facets)
 plot_circos(sv = sv_manta, cnv = cn_titan)
 ```
 
+### Manta with PURPLE
+
+```{r circos-plot-manta-purple, fig.width=8, fig.height=8}
+plot_circos(sv = sv_manta, cnv = cn_purple)
+```
 
 ## Piano Plots
 

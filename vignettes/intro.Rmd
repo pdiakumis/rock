@@ -20,16 +20,13 @@ knitr::opts_chunk$set(
 require(rock)
 ```
 
-## Hello
 
-Say hello to each element:
-
-```{r}
-x <- c("Foo", "Bar", "Baz")
-hello(x)
-```
 
 ## Circos Plots
+
+* We can generate circos plots using the functionality available in the
+  [OmicCircos](https://bioconductor.org/packages/release/bioc/html/OmicCircos.html)
+  Bioconductor R package.
 
 * Start by preparing the SV and CNV calls.
 
@@ -47,10 +44,19 @@ cn_titan <- prep_titan_seg(titan)
 cn_purple <- prep_purple_seg(purple)
 ```
 
-* Now we can generate a circos plot with Manta links and FACETS/CNVkit/TitanCNA segments
+* Now we can generate a circos plot with Manta links and FACETS/CNVkit/TitanCNA/PURPLE segments
   (note that the `Warning` message below is due to a hack used in the OmicCircos
   code, where a matrix with numbers and characters is coerced to numeric.
   Just don't worry about it..):
+
+* For the internal lines:
+    - The _inter_chromosomal links take the chromosome colour of mate1 of each breakend pair.
+    - The _intra_chromosomal lines are coloured according to the variant type:
+        - Deletions: Red
+        - Duplications: Green
+        - Insertions: Purple
+        - Inversions: Orange
+
 
 ### Manta with CNVkit
 

@@ -1,34 +1,36 @@
 
 # Rocking R at UMCCR
 
-[![Travis build
-status](https://travis-ci.org/umccr/rock.svg?branch=master)](https://travis-ci.org/umccr/rock)
-[![Coverage
-status](https://codecov.io/gh/umccr/rock/branch/master/graph/badge.svg)](https://codecov.io/github/umccr/rock?branch=master)
+<!-- [![Travis build status](https://travis-ci.org/umccr/rock.svg?branch=master)](https://travis-ci.org/umccr/rock) -->
+
+<!-- [![Coverage status](https://codecov.io/gh/umccr/rock/branch/master/graph/badge.svg)](https://codecov.io/github/umccr/rock?branch=master) -->
 
 `rock` is an R package that (hopefully) helps with the day to day
 bioinformatics life at UMCCR (UniMelb Centre for Cancer Research).
 
 You can do the following:
 
-  - Create circos plots using structural variant calls from Manta, and
-    copy number variant calls from FACETS or CNVkit. The OmicCircos R
-    package is used.
+  - Create circos plots using structural variant calls from
+    [Manta](https://github.com/Illumina/manta), and copy number variant
+    calls from [CNVkit](https://github.com/etal/cnvkit),
+    [FACETS](https://github.com/mskcc/facets),
+    [TitanCNA](https://github.com/gavinha/TitanCNA) or
+    [PURPLE](https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator).
+    The OmicCircos R package is used.
 
   - Create CNV profiles in horizontal facets for multiple samples or
     callers (piano plots)
 
 ## Contents
 
-
 <!-- vim-markdown-toc GFM -->
 
 * [Installation](#installation)
 * [Circos Plots](#circos-plots)
-    * [Manta with PURPLE](#manta-with-purple)
     * [Manta with CNVkit](#manta-with-cnvkit)
     * [Manta with FACETS](#manta-with-facets)
     * [Manta with TitanCNA](#manta-with-titancna)
+    * [Manta with PURPLE](#manta-with-purple)
 * [Piano Plots](#piano-plots)
 
 <!-- vim-markdown-toc -->
@@ -96,19 +98,6 @@ cn_purple <- prep_purple_seg(purple)
           - Insertions: Purple
           - Inversions: Orange
 
-### Manta with PURPLE
-
-``` r
-plot_circos(sv = sv_manta, cnv = cn_purple)
-#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
-#> = "arc", : NAs introduced by coercion
-
-#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
-#> = "arc", : NAs introduced by coercion
-```
-
-<img src="man/figures/README-circos-plot-manta-purple-1.png" width="100%" />
-
 ### Manta with CNVkit
 
 ``` r
@@ -147,6 +136,19 @@ plot_circos(sv = sv_manta, cnv = cn_titan)
 ```
 
 <img src="man/figures/README-circos-plot-manta-titan-1.png" width="100%" />
+
+### Manta with PURPLE
+
+``` r
+plot_circos(sv = sv_manta, cnv = cn_purple)
+#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
+#> = "arc", : NAs introduced by coercion
+
+#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
+#> = "arc", : NAs introduced by coercion
+```
+
+<img src="man/figures/README-circos-plot-manta-purple-1.png" width="100%" />
 
 ## Piano Plots
 
