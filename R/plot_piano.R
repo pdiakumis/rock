@@ -20,10 +20,10 @@
 #' cn_cnvkit <- prep_cnvkit_seg(cnvkit)
 #' cn_titan <- prep_titan_seg(titan)
 #' cn_purple <- prep_purple_seg(purple)
-#'
+#' cnv_list <- list(cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan)
 #'
 #' pdf("/path/to/piano1.pdf", width = 7, height = 7)
-#' plot_piano(list(cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan))
+#' plot_piano(cnv_list)
 #' dev.off()
 #' }
 #' @export
@@ -31,39 +31,66 @@ plot_piano <- function(cnv_list) {
 
   multicnv <- .prep_piano(cnv_list)
 
-  # factor for chromosome plot order
-  p <- multicnv %>%
-    dplyr::mutate(chrom = factor(.data$chrom, levels = c(1:22, "X", "Y")))
+  # fake data to make sure chromosome limits are kept
+  chr_len <- pebbles::chr_info[1:24, c("NCBI", "length")]
+  length_ranges <- c(rbind(rep(0, 24), chr_len$length))
+  chr_limits <- data.frame(chrom = rep(chr_len$NCBI, each = 2),
+                           pos = length_ranges,
+                           tot_cn = 2)
 
   start <- quo(start)
   end <- quo(end)
   y1 <- quo(y1)
   y2 <- quo(y2)
   col <- quo(col)
+  fill <- quo(fill)
   var <- quo(var)
   chrom <- quo(chrom)
+  mid <- quo(mid)
+  pos <- quo(pos)
+  tot_cn <- quo(tot_cn)
 
-    ggplot2::ggplot(p) +
+  multicnv %>%
+    ggplot2::ggplot() +
     ggplot2::geom_rect(ggplot2::aes(xmin = !!start, xmax = !!end,
-                                    ymin = !!y1, ymax = !!y2, fill = !!col)) +
+                                    ymin = !!y1, ymax = !!y2, fill = !!fill)) +
     ggplot2::geom_hline(yintercept = 2, color = "blue", size = 0.25) +
     ggplot2::scale_fill_identity() +
-    ggplot2::facet_grid(ggplot2::vars(var), ggplot2::vars(chrom), scales = "free_x") +
+    ggplot2::coord_cartesian(ylim = c(0, 7.5)) +
+    ggplot2::geom_blank(data = chr_limits, ggplot2::aes(x = !!pos, y = !!tot_cn)) +
+    ggplot2::facet_grid(ggplot2::vars(var), ggplot2::vars(chrom), scales = "free_x", space = "free_x", switch = "y", drop = FALSE) +
+    ggplot2::scale_y_continuous(breaks = scales::pretty_breaks(n = 10), expand = c(0, 0)) +
     ggplot2::theme(
       axis.title.x = ggplot2::element_blank(),
       axis.text.x = ggplot2::element_blank(),
       axis.ticks.x = ggplot2::element_blank(),
       panel.grid.major = ggplot2::element_blank(),
       panel.grid.minor = ggplot2::element_blank(),
-      panel.background = ggplot2::element_rect(fill = 'white', colour = "grey"),
+      panel.background = ggplot2::element_rect(fill = 'white', colour = "grey95"),
+      strip.background = ggplot2::element_rect(colour = "grey95", fill = "grey90"),
       strip.text.y = ggplot2::element_text(size = 11),
-      strip.text.x = ggplot2::element_text(size = 11),
-      panel.spacing.x = grid::unit(0.1, "lines"))
+      strip.text.x = ggplot2::element_text(size = 8),
+      panel.spacing.x = grid::unit(0.01, "lines")
+      )
 
 }
 
 
 # Prepare data for plotting a piano plot
+#
+# Prepares data for plotting a piano plot
+#
+# env <- new.env()
+# env$cnvkit <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
+# env$facets <- system.file("extdata", "HCC2218_facets_cncf.tsv", package = "pebbles")
+# env$titan <- system.file("extdata", "HCC2218_titan.segs.tsv", package = "pebbles")
+# env$purple <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
+#
+# env$cn_facets <- prep_facets_seg(env$facets)
+# env$cn_cnvkit <- prep_cnvkit_seg(env$cnvkit)
+# env$cn_titan <- prep_titan_seg(env$titan)
+# env$cn_purple <- prep_purple_seg(env$purple)
+# cnv_list <- list(cnvkit = env$cn_cnvkit, facets = env$cn_facets, purple = env$cn_purple, titan = env$cn_titan)
 .prep_piano <- function(cnv_list) {
 
   stopifnot(rlang::is_list(cnv_list))
@@ -72,14 +99,14 @@ plot_piano <- function(cnv_list) {
 
   multicnv <- purrr::map(cnv_list, "cnv") %>%
     dplyr::bind_rows(.id = "var") %>%
-    dplyr::mutate(y1 = .data$tot_cn - 0.5,
-                  y2 = .data$tot_cn + 0.5,
-                  col = dplyr::case_when(
-                    .data$tot_cn == 0 ~ "red",
-                    .data$tot_cn == 1 ~ "red",
-                    .data$tot_cn == 2 ~ "grey95",
-                    .data$tot_cn >= 3 ~ "green",
-                    TRUE    ~ "purple"))
+    dplyr::mutate(
+      y1 = ifelse(.data$tot_cn > 6, 6, 2),
+      y2 = ifelse(.data$tot_cn > 6, 7, .data$tot_cn),
+      fill = dplyr::case_when(.data$tot_cn >= 0 & .data$tot_cn < 2 ~ "red",
+                              .data$tot_cn > 2 & .data$tot_cn <= 6 ~ "green",
+                              .data$tot_cn > 6                     ~ "darkgreen",
+                              TRUE                                 ~ "purple"),
+      chrom = readr::parse_factor(.data$chrom, levels = c(1:22, "X", "Y")))
 
   multicnv
 

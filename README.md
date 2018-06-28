@@ -1,9 +1,10 @@
 
 # Rocking R at UMCCR
 
-<!-- [![Travis build status](https://travis-ci.org/umccr/rock.svg?branch=master)](https://travis-ci.org/umccr/rock) -->
-
-<!-- [![Coverage status](https://codecov.io/gh/umccr/rock/branch/master/graph/badge.svg)](https://codecov.io/github/umccr/rock?branch=master) -->
+[![Travis build
+status](https://travis-ci.org/umccr/rock.svg?branch=master)](https://travis-ci.org/umccr/rock)
+[![Coverage
+status](https://codecov.io/gh/umccr/rock/branch/master/graph/badge.svg)](https://codecov.io/github/umccr/rock?branch=master)
 
 `rock` is an R package that (hopefully) helps with the day to day
 bioinformatics life at UMCCR (UniMelb Centre for Cancer Research).

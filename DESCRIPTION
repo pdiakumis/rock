@@ -21,6 +21,7 @@ Imports:
     purrr,
     readr,
     rlang (>= 0.1.2),
+    scales,
     tibble,
     tidyr,
     vcfR

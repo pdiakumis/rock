@@ -30,10 +30,10 @@ cn_facets <- prep_facets_seg(facets)
 cn_cnvkit <- prep_cnvkit_seg(cnvkit)
 cn_titan <- prep_titan_seg(titan)
 cn_purple <- prep_purple_seg(purple)
-
+cnv_list <- list(cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan)
 
 pdf("/path/to/piano1.pdf", width = 7, height = 7)
-plot_piano(list(cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan))
+plot_piano(cnv_list)
 dev.off()
 }
 }
