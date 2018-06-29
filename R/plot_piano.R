@@ -15,12 +15,15 @@
 #' facets <- system.file("extdata", "HCC2218_facets_cncf.tsv", package = "pebbles")
 #' titan <- system.file("extdata", "HCC2218_titan.segs.tsv", package = "pebbles")
 #' purple <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
+#' truth <- system.file("extdata", "HCC2218_truthset_cnv_bcbio.tsv", package = "pebbles")
 #'
 #' cn_facets <- prep_facets_seg(facets)
 #' cn_cnvkit <- prep_cnvkit_seg(cnvkit)
 #' cn_titan <- prep_titan_seg(titan)
 #' cn_purple <- prep_purple_seg(purple)
-#' cnv_list <- list(cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan)
+#' cn_truth <- prep_truth_seg(truth)
+#' cnv_list <- list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets,
+#'                  purple = cn_purple, titan = cn_titan)
 #'
 #' pdf("/path/to/piano1.pdf", width = 7, height = 7)
 #' plot_piano(cnv_list)
@@ -29,7 +32,7 @@
 #' @export
 plot_piano <- function(cnv_list) {
 
-  multicnv <- .prep_piano(cnv_list)
+  multicnv <- prep_piano(cnv_list)
 
   # fake data to make sure chromosome limits are kept
   chr_len <- pebbles::chr_info[1:24, c("NCBI", "length")]
@@ -85,17 +88,21 @@ plot_piano <- function(cnv_list) {
 # env$facets <- system.file("extdata", "HCC2218_facets_cncf.tsv", package = "pebbles")
 # env$titan <- system.file("extdata", "HCC2218_titan.segs.tsv", package = "pebbles")
 # env$purple <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
+# env$truth <- system.file("extdata", "HCC2218_truthset_cnv_bcbio.tsv", package = "pebbles")
 #
 # env$cn_facets <- prep_facets_seg(env$facets)
 # env$cn_cnvkit <- prep_cnvkit_seg(env$cnvkit)
 # env$cn_titan <- prep_titan_seg(env$titan)
 # env$cn_purple <- prep_purple_seg(env$purple)
-# cnv_list <- list(cnvkit = env$cn_cnvkit, facets = env$cn_facets, purple = env$cn_purple, titan = env$cn_titan)
-.prep_piano <- function(cnv_list) {
+# env$cn_truth <- prep_truth_seg(env$truth)
+# cnv_list <- list(truth = env$cn_truth, cnvkit = env$cn_cnvkit, facets = env$cn_facets, purple = env$cn_purple, titan = env$cn_titan)
+prep_piano <- function(cnv_list) {
 
   stopifnot(rlang::is_list(cnv_list))
   stopifnot(rlang::is_dictionaryish(cnv_list))
   stopifnot(all(purrr::map_lgl(cnv_list, function(x) class(x) == "cnv")))
+
+  var_names <- names(cnv_list)
 
   multicnv <- purrr::map(cnv_list, "cnv") %>%
     dplyr::bind_rows(.id = "var") %>%
@@ -106,7 +113,8 @@ plot_piano <- function(cnv_list) {
                               .data$tot_cn > 2 & .data$tot_cn <= 6 ~ "green",
                               .data$tot_cn > 6                     ~ "darkgreen",
                               TRUE                                 ~ "purple"),
-      chrom = readr::parse_factor(.data$chrom, levels = c(1:22, "X", "Y")))
+      chrom = readr::parse_factor(.data$chrom, levels = c(1:22, "X", "Y")),
+      var = readr::parse_factor(.data$var, levels = var_names))
 
   multicnv
 

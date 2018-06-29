@@ -29,8 +29,6 @@ You can do the following:
 * [Installation](#installation)
 * [Circos Plots](#circos-plots)
     * [Manta with CNVkit](#manta-with-cnvkit)
-    * [Manta with FACETS](#manta-with-facets)
-    * [Manta with TitanCNA](#manta-with-titancna)
     * [Manta with PURPLE](#manta-with-purple)
 * [Piano Plots](#piano-plots)
 
@@ -74,12 +72,14 @@ cnvkit <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
 facets <- system.file("extdata", "HCC2218_facets_cncf.tsv", package = "pebbles")
 titan <- system.file("extdata", "HCC2218_titan.segs.tsv", package = "pebbles")
 purple <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
+truth <- system.file("extdata", "HCC2218_truthset_cnv_bcbio.tsv", package = "pebbles")
 
 sv_manta <- prep_manta_vcf(manta)
 cn_facets <- prep_facets_seg(facets)
 cn_cnvkit <- prep_cnvkit_seg(cnvkit)
 cn_titan <- prep_titan_seg(titan)
 cn_purple <- prep_purple_seg(purple)
+cn_truth <- prep_truth_seg(truth)
 ```
 
   - Now we can generate a circos plot with Manta links and
@@ -112,32 +112,6 @@ plot_circos(sv = sv_manta, cnv = cn_cnvkit)
 
 <img src="man/figures/README-circos-plot-manta-cnvkit-1.png" width="100%" />
 
-### Manta with FACETS
-
-``` r
-plot_circos(sv = sv_manta, cnv = cn_facets)
-#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
-#> = "arc", : NAs introduced by coercion
-
-#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
-#> = "arc", : NAs introduced by coercion
-```
-
-<img src="man/figures/README-circos-plot-manta-facets-1.png" width="100%" />
-
-### Manta with TitanCNA
-
-``` r
-plot_circos(sv = sv_manta, cnv = cn_titan)
-#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
-#> = "arc", : NAs introduced by coercion
-
-#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
-#> = "arc", : NAs introduced by coercion
-```
-
-<img src="man/figures/README-circos-plot-manta-titan-1.png" width="100%" />
-
 ### Manta with PURPLE
 
 ``` r
@@ -160,7 +134,7 @@ samples.
 <!-- end list -->
 
 ``` r
-plot_piano(list(cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan))
+plot_piano(list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan))
 ```
 
 <img src="man/figures/README-piano-plot-cnvkit-facets-purple-titan1-1.png" width="100%" />

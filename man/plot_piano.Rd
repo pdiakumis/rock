@@ -25,12 +25,15 @@ cnvkit <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
 facets <- system.file("extdata", "HCC2218_facets_cncf.tsv", package = "pebbles")
 titan <- system.file("extdata", "HCC2218_titan.segs.tsv", package = "pebbles")
 purple <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
+truth <- system.file("extdata", "HCC2218_truthset_cnv_bcbio.tsv", package = "pebbles")
 
 cn_facets <- prep_facets_seg(facets)
 cn_cnvkit <- prep_cnvkit_seg(cnvkit)
 cn_titan <- prep_titan_seg(titan)
 cn_purple <- prep_purple_seg(purple)
-cnv_list <- list(cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan)
+cn_truth <- prep_truth_seg(truth)
+cnv_list <- list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets,
+                 purple = cn_purple, titan = cn_titan)
 
 pdf("/path/to/piano1.pdf", width = 7, height = 7)
 plot_piano(cnv_list)
