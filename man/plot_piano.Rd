@@ -4,16 +4,25 @@
 \alias{plot_piano}
 \title{Generate Piano Plot}
 \usage{
-plot_piano(cnv_list)
+plot_piano(cnv_list, chromosomes = c(1:22, "X", "Y"))
 }
 \arguments{
 \item{cnv_list}{A named list containing one or more \code{cnv} objects.
 The element names will be used for plotting the facets so they need to be unique.
 See the examples for usage.}
+
+\item{chromosomes}{Character vector of chromosomes to plot.}
 }
 \value{
 A piano plot with copy number variant segments across
-multiple facets per sample or caller.
+multiple facets per sample or caller:
+\itemize{
+\item X axis: Chromosome Position
+\item Y axis: Total Copy Number
+\item Light green: amplifications (up to CN6)
+\item Dark green: amplifications (greater than CN6, capped off at CN7)
+\item Red: deletions
+}
 }
 \description{
 Generates a piano plot containing copy number variants from multiple samples
@@ -35,8 +44,7 @@ cn_truth <- prep_truth_seg(truth)
 cnv_list <- list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets,
                  purple = cn_purple, titan = cn_titan)
 
-pdf("/path/to/piano1.pdf", width = 7, height = 7)
 plot_piano(cnv_list)
-dev.off()
+plot_piano(cnv_list, chromosomes = c(1:10))
 }
 }

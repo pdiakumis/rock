@@ -6,8 +6,14 @@
 #' @param cnv_list A named list containing one or more `cnv` objects.
 #' The element names will be used for plotting the facets so they need to be unique.
 #' See the examples for usage.
+#' @param chromosomes Character vector of chromosomes to plot.
 #' @return A piano plot with copy number variant segments across
-#' multiple facets per sample or caller.
+#' multiple facets per sample or caller:
+#'   - X axis: Chromosome Position
+#'   - Y axis: Total Copy Number
+#'   - Light green: amplifications (up to CN6)
+#'   - Dark green: amplifications (greater than CN6, capped off at CN7)
+#'   - Red: deletions
 #'
 #' @examples
 #' \dontrun{
@@ -25,21 +31,23 @@
 #' cnv_list <- list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets,
 #'                  purple = cn_purple, titan = cn_titan)
 #'
-#' pdf("/path/to/piano1.pdf", width = 7, height = 7)
 #' plot_piano(cnv_list)
-#' dev.off()
+#' plot_piano(cnv_list, chromosomes = c(1:10))
 #' }
 #' @export
-plot_piano <- function(cnv_list) {
+plot_piano <- function(cnv_list, chromosomes = c(1:22, "X", "Y")) {
 
-  multicnv <- prep_piano(cnv_list)
+  multicnv <- prep_piano(cnv_list, chromosomes)
 
   # fake data to make sure chromosome limits are kept
   chr_len <- pebbles::chr_info[1:24, c("NCBI", "length")]
   length_ranges <- c(rbind(rep(0, 24), chr_len$length))
-  chr_limits <- data.frame(chrom = rep(chr_len$NCBI, each = 2),
+  chr_limits <- tibble::tibble(chrom = rep(chr_len$NCBI, each = 2),
                            pos = length_ranges,
-                           tot_cn = 2)
+                           tot_cn = 2) %>%
+    dplyr::filter(.data$chrom %in% chromosomes) %>%
+    dplyr::mutate(chrom = readr::parse_factor(.data$chrom, levels = chromosomes))
+
 
   start <- quo(start)
   end <- quo(end)
@@ -61,7 +69,8 @@ plot_piano <- function(cnv_list) {
     ggplot2::scale_fill_identity() +
     ggplot2::coord_cartesian(ylim = c(0, 7.5)) +
     ggplot2::geom_blank(data = chr_limits, ggplot2::aes(x = !!pos, y = !!tot_cn)) +
-    ggplot2::facet_grid(ggplot2::vars(var), ggplot2::vars(chrom), scales = "free_x", space = "free_x", switch = "y", drop = FALSE) +
+    ggplot2::facet_grid(ggplot2::vars(var), ggplot2::vars(chrom),
+                        scales = "free_x", space = "free_x", switch = "y", drop = TRUE) +
     ggplot2::scale_y_continuous(breaks = scales::pretty_breaks(n = 10), expand = c(0, 0)) +
     ggplot2::theme(
       axis.title.x = ggplot2::element_blank(),
@@ -96,11 +105,12 @@ plot_piano <- function(cnv_list) {
 # env$cn_purple <- prep_purple_seg(env$purple)
 # env$cn_truth <- prep_truth_seg(env$truth)
 # cnv_list <- list(truth = env$cn_truth, cnvkit = env$cn_cnvkit, facets = env$cn_facets, purple = env$cn_purple, titan = env$cn_titan)
-prep_piano <- function(cnv_list) {
+prep_piano <- function(cnv_list, chromosomes = c(1:22, "X", "Y")) {
 
   stopifnot(rlang::is_list(cnv_list))
   stopifnot(rlang::is_dictionaryish(cnv_list))
   stopifnot(all(purrr::map_lgl(cnv_list, function(x) class(x) == "cnv")))
+  stopifnot(all(chromosomes %in% c(1:22, "X", "Y")))
 
   var_names <- names(cnv_list)
 
@@ -114,7 +124,8 @@ prep_piano <- function(cnv_list) {
                               .data$tot_cn > 6                     ~ "darkgreen",
                               TRUE                                 ~ "purple"),
       chrom = readr::parse_factor(.data$chrom, levels = c(1:22, "X", "Y")),
-      var = readr::parse_factor(.data$var, levels = var_names))
+      var = readr::parse_factor(.data$var, levels = var_names)) %>%
+    dplyr::filter(.data$chrom %in% chromosomes)
 
   multicnv
 
