@@ -7,6 +7,7 @@
 #' The element names will be used for plotting the facets so they need to be unique.
 #' See the examples for usage.
 #' @param chromosomes Character vector of chromosomes to plot.
+#' @param hide_x_lab Boolean. Should the X axis chromosome position labels be hidden or not?
 #' @return A piano plot with copy number variant segments across
 #' multiple facets per sample or caller:
 #'   - X axis: Chromosome Position
@@ -35,7 +36,7 @@
 #' plot_piano(cnv_list, chromosomes = c(1:10))
 #' }
 #' @export
-plot_piano <- function(cnv_list, chromosomes = c(1:22, "X", "Y")) {
+plot_piano <- function(cnv_list, chromosomes = c(1:22, "X", "Y"), hide_x_lab = TRUE) {
 
   multicnv <- prep_piano(cnv_list, chromosomes)
 
@@ -61,7 +62,7 @@ plot_piano <- function(cnv_list, chromosomes = c(1:22, "X", "Y")) {
   pos <- quo(pos)
   tot_cn <- quo(tot_cn)
 
-  multicnv %>%
+  p <- multicnv %>%
     ggplot2::ggplot() +
     ggplot2::geom_rect(ggplot2::aes(xmin = !!start, xmax = !!end,
                                     ymin = !!y1, ymax = !!y2, fill = !!fill)) +
@@ -72,19 +73,28 @@ plot_piano <- function(cnv_list, chromosomes = c(1:22, "X", "Y")) {
     ggplot2::facet_grid(ggplot2::vars(var), ggplot2::vars(chrom),
                         scales = "free_x", space = "free_x", switch = "y", drop = TRUE) +
     ggplot2::scale_y_continuous(breaks = scales::pretty_breaks(n = 10), expand = c(0, 0)) +
-    ggplot2::scale_x_continuous(expand = c(0, 0)) +
-    ggplot2::theme(
-      axis.title.x = ggplot2::element_blank(),
-      axis.text.x = ggplot2::element_blank(),
-      axis.ticks.x = ggplot2::element_blank(),
-      panel.grid.major = ggplot2::element_blank(),
-      panel.grid.minor = ggplot2::element_blank(),
-      panel.background = ggplot2::element_rect(fill = 'white', colour = "grey85"),
-      strip.background = ggplot2::element_rect(colour = "grey95", fill = "grey90"),
-      strip.text.y = ggplot2::element_text(size = 11),
-      strip.text.x = ggplot2::element_text(size = 8),
-      panel.spacing.x = grid::unit(0.01, "lines")
-      )
+    ggplot2::scale_x_continuous(breaks = scales::pretty_breaks(n = 4), labels = scales::comma, expand = c(0, 0))
+
+  base_theme <- ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 30, vjust = 1, hjust = 1),
+    panel.grid.major = ggplot2::element_blank(),
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.background = ggplot2::element_rect(fill = 'white', colour = "grey85"),
+    strip.background = ggplot2::element_rect(colour = "grey95", fill = "grey90"),
+    strip.text.y = ggplot2::element_text(size = 11),
+    strip.text.x = ggplot2::element_text(size = 8),
+    panel.spacing.x = grid::unit(0.01, "lines")
+  )
+
+  hide_x_lab_theme <- ggplot2::theme(
+    axis.ticks.x = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_blank())
+
+  if (hide_x_lab) {
+    return(p + base_theme + hide_x_lab_theme)
+  } else {
+    return(p + base_theme)
+  }
 
 }
 

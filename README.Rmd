@@ -118,7 +118,8 @@ plot_piano(list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple
 
 ```{r piano-plot-chrom, fig.width=10, fig.height=7}
 plot_piano(list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan),
-           chromosomes = c("1", "7", "8"))
+           chromosomes = c("1", "7", "8"),
+           hide_x_lab = FALSE)
 ```
 
   

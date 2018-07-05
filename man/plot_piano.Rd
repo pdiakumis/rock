@@ -4,7 +4,7 @@
 \alias{plot_piano}
 \title{Generate Piano Plot}
 \usage{
-plot_piano(cnv_list, chromosomes = c(1:22, "X", "Y"))
+plot_piano(cnv_list, chromosomes = c(1:22, "X", "Y"), hide_x_lab = FALSE)
 }
 \arguments{
 \item{cnv_list}{A named list containing one or more \code{cnv} objects.
@@ -12,6 +12,8 @@ The element names will be used for plotting the facets so they need to be unique
 See the examples for usage.}
 
 \item{chromosomes}{Character vector of chromosomes to plot.}
+
+\item{hide_x_lab}{Boolean. Should the X axis chromosome position labels be hidden or not?}
 }
 \value{
 A piano plot with copy number variant segments across

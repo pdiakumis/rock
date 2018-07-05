@@ -146,7 +146,8 @@ chromosomes:
 
 ``` r
 plot_piano(list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan),
-           chromosomes = c("1", "7", "8"))
+           chromosomes = c("1", "7", "8"),
+           hide_x_lab = FALSE)
 ```
 
 <img src="man/figures/README-piano-plot-chrom-1.png" width="100%" />
