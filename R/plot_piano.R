@@ -90,6 +90,20 @@ plot_piano <- function(cnv_list, chromosomes = c(1:22, "X", "Y"), hide_x_lab = T
     axis.ticks.x = ggplot2::element_blank(),
     axis.text.x = ggplot2::element_blank())
 
+  if (nrow(multicnv) == 0) {
+    text <- "No CNVs to display here!"
+    p <- ggplot2::ggplot() +
+      ggplot2::annotate("text", x = 4, y = 10, size = 8, label = text) +
+      ggplot2::theme_bw() +
+      ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                     panel.grid.minor = ggplot2::element_blank(),
+                     axis.text = ggplot2::element_blank(),
+                     axis.ticks = ggplot2::element_blank(),
+                     axis.title = ggplot2::element_blank())
+
+      return(p)
+  }
+
   if (hide_x_lab) {
     return(p + base_theme + hide_x_lab_theme)
   } else {

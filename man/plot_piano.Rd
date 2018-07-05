@@ -4,7 +4,7 @@
 \alias{plot_piano}
 \title{Generate Piano Plot}
 \usage{
-plot_piano(cnv_list, chromosomes = c(1:22, "X", "Y"), hide_x_lab = FALSE)
+plot_piano(cnv_list, chromosomes = c(1:22, "X", "Y"), hide_x_lab = TRUE)
 }
 \arguments{
 \item{cnv_list}{A named list containing one or more \code{cnv} objects.
