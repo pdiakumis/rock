@@ -114,4 +114,11 @@ plot_circos(sv = sv_manta, cnv = cn_purple)
 plot_piano(list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan))
 ```
   
+* You can also zoom into chromosomes:
+
+```{r piano-plot-chrom, fig.width=10, fig.height=7}
+plot_piano(list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan),
+           chromosomes = c("1", "7", "8"))
+```
+
   

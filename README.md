@@ -138,3 +138,15 @@ plot_piano(list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple
 ```
 
 <img src="man/figures/README-piano-plot-cnvkit-facets-purple-titan1-1.png" width="100%" />
+
+  - You can also zoom into
+chromosomes:
+
+<!-- end list -->
+
+``` r
+plot_piano(list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan),
+           chromosomes = c("1", "7", "8"))
+```
+
+<img src="man/figures/README-piano-plot-chrom-1.png" width="100%" />

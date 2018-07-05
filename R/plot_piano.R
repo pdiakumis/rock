@@ -41,7 +41,7 @@ plot_piano <- function(cnv_list, chromosomes = c(1:22, "X", "Y")) {
 
   # fake data to make sure chromosome limits are kept
   chr_len <- pebbles::chr_info[1:24, c("NCBI", "length")]
-  length_ranges <- c(rbind(rep(0, 24), chr_len$length))
+  length_ranges <- c(rbind(rep(1, 24), chr_len$length))
   chr_limits <- tibble::tibble(chrom = rep(chr_len$NCBI, each = 2),
                            pos = length_ranges,
                            tot_cn = 2) %>%
@@ -72,13 +72,14 @@ plot_piano <- function(cnv_list, chromosomes = c(1:22, "X", "Y")) {
     ggplot2::facet_grid(ggplot2::vars(var), ggplot2::vars(chrom),
                         scales = "free_x", space = "free_x", switch = "y", drop = TRUE) +
     ggplot2::scale_y_continuous(breaks = scales::pretty_breaks(n = 10), expand = c(0, 0)) +
+    ggplot2::scale_x_continuous(expand = c(0, 0)) +
     ggplot2::theme(
       axis.title.x = ggplot2::element_blank(),
       axis.text.x = ggplot2::element_blank(),
       axis.ticks.x = ggplot2::element_blank(),
       panel.grid.major = ggplot2::element_blank(),
       panel.grid.minor = ggplot2::element_blank(),
-      panel.background = ggplot2::element_rect(fill = 'white', colour = "grey95"),
+      panel.background = ggplot2::element_rect(fill = 'white', colour = "grey85"),
       strip.background = ggplot2::element_rect(colour = "grey95", fill = "grey90"),
       strip.text.y = ggplot2::element_text(size = 11),
       strip.text.x = ggplot2::element_text(size = 8),
@@ -116,12 +117,13 @@ prep_piano <- function(cnv_list, chromosomes = c(1:22, "X", "Y")) {
 
   multicnv <- purrr::map(cnv_list, "cnv") %>%
     dplyr::bind_rows(.id = "var") %>%
+    dplyr::filter(.data$tot_cn != 2) %>%
     dplyr::mutate(
-      y1 = ifelse(.data$tot_cn > 6, 6, 2),
+      y1 = 2,
       y2 = ifelse(.data$tot_cn > 6, 7, .data$tot_cn),
       fill = dplyr::case_when(.data$tot_cn >= 0 & .data$tot_cn < 2 ~ "red",
                               .data$tot_cn > 2 & .data$tot_cn <= 6 ~ "green",
-                              .data$tot_cn > 6                     ~ "darkgreen",
+                              .data$tot_cn > 6                     ~ "green3",
                               TRUE                                 ~ "purple"),
       chrom = readr::parse_factor(.data$chrom, levels = c(1:22, "X", "Y")),
       var = readr::parse_factor(.data$var, levels = var_names)) %>%
