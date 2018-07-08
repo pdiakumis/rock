@@ -151,3 +151,18 @@ plot_piano(list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple
 ```
 
 <img src="man/figures/README-piano-plot-chrom-1.png" width="100%" />
+
+  - And even plot an ideogram of the chromosome:
+
+<!-- end list -->
+
+``` r
+require(patchwork)
+#> Loading required package: patchwork
+plot_ideogram(chrom = "13") +
+  plot_piano(list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple), 
+             chromosomes = "13", hide_x_lab = FALSE) +
+  plot_layout(ncol = 1, heights = c(1, 15))
+```
+
+<img src="man/figures/README-piano-plot-chrom-ideo-1.png" width="100%" />

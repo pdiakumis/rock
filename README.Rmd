@@ -122,4 +122,14 @@ plot_piano(list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple
            hide_x_lab = FALSE)
 ```
 
+* And even plot an ideogram of the chromosome:
+
+```{r piano-plot-chrom-ideo, fig.width=10, fig.height=7}
+require(patchwork)
+plot_ideogram(chrom = "13") +
+  plot_piano(list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple), 
+             chromosomes = "13", hide_x_lab = FALSE) +
+  plot_layout(ncol = 1, heights = c(1, 15))
+```
+
   
