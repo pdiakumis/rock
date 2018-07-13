@@ -37,3 +37,15 @@ read_purple_seg <- function(purple) {
   return(cnv)
 
 }
+
+# read PURPLE fitted file
+# cn <- system.file("extdata", "HCC2218_purple.fitted.tsv", package = "pebbles")
+# read_purple_fitted(cn)
+read_purple_fitted <- function(purple) {
+  stopifnot(file.exists(purple))
+
+  cnv <- readr::read_tsv(purple, col_types = "ciicddddddddddddddccdddcd") %>%
+    dplyr::rename(chrom = .data$`#chromosome`)
+
+  return(cnv)
+}
