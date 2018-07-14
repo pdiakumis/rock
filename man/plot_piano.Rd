@@ -4,7 +4,8 @@
 \alias{plot_piano}
 \title{Generate Piano Plot}
 \usage{
-plot_piano(cnv_list, chromosomes = c(1:22, "X", "Y"), hide_x_lab = TRUE)
+plot_piano(cnv_list, chromosomes = c(1:22, "X", "Y"), hide_x_lab = TRUE,
+  seg.col = c("red", "green", "green3", "blue"))
 }
 \arguments{
 \item{cnv_list}{A named list containing one or more \code{cnv} objects.
@@ -14,6 +15,9 @@ See the examples for usage.}
 \item{chromosomes}{Character vector of chromosomes to plot.}
 
 \item{hide_x_lab}{Boolean. Should the X axis chromosome position labels be hidden or not?}
+
+\item{seg.col}{Character vector of colours to use for deletions, amplifications,
+extreme amplifications and everything else. Default values: red, green , green3, blue.}
 }
 \value{
 A piano plot with copy number variant segments across
@@ -21,9 +25,10 @@ multiple facets per sample or caller:
 \itemize{
 \item X axis: Chromosome Position
 \item Y axis: Total Copy Number
-\item Light green: amplifications (up to CN6)
-\item Dark green: amplifications (greater than CN6, capped off at CN7)
-\item Red: deletions
+\item Colour 1 (red): deletions
+\item Colour 2 (light green): amplifications (up to CN6)
+\item Colour 3 (dark green): amplifications (greater than CN6, capped off at CN7)
+\item Colour 4 (blue): everything else
 }
 }
 \description{
@@ -48,5 +53,6 @@ cnv_list <- list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets,
 
 plot_piano(cnv_list)
 plot_piano(cnv_list, chromosomes = c(1:10))
+plot_piano(cnv_list, seg.col = c("orange", "lightblue", "blue", "pink"))
 }
 }

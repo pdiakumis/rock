@@ -8,13 +8,16 @@
 #' See the examples for usage.
 #' @param chromosomes Character vector of chromosomes to plot.
 #' @param hide_x_lab Boolean. Should the X axis chromosome position labels be hidden or not?
+#' @param seg.col Character vector of colours to use for deletions, amplifications,
+#' extreme amplifications and everything else. Default values: red, green , green3, blue.
 #' @return A piano plot with copy number variant segments across
 #' multiple facets per sample or caller:
 #'   - X axis: Chromosome Position
 #'   - Y axis: Total Copy Number
-#'   - Light green: amplifications (up to CN6)
-#'   - Dark green: amplifications (greater than CN6, capped off at CN7)
-#'   - Red: deletions
+#'   - Colour 1 (red): deletions
+#'   - Colour 2 (light green): amplifications (up to CN6)
+#'   - Colour 3 (dark green): amplifications (greater than CN6, capped off at CN7)
+#'   - Colour 4 (blue): everything else
 #'
 #' @examples
 #' \dontrun{
@@ -34,11 +37,15 @@
 #'
 #' plot_piano(cnv_list)
 #' plot_piano(cnv_list, chromosomes = c(1:10))
+#' plot_piano(cnv_list, seg.col = c("orange", "lightblue", "blue", "pink"))
 #' }
 #' @export
-plot_piano <- function(cnv_list, chromosomes = c(1:22, "X", "Y"), hide_x_lab = TRUE) {
+plot_piano <- function(cnv_list,
+                       chromosomes = c(1:22, "X", "Y"),
+                       hide_x_lab = TRUE,
+                       seg.col = c("red", "green", "green3", "blue")) {
 
-  multicnv <- prep_piano(cnv_list, chromosomes)
+  multicnv <- prep_piano(cnv_list, chromosomes, seg.col = seg.col)
 
   # fake data to make sure chromosome limits are kept
   chr_len <- pebbles::chr_info[1:24, c("NCBI", "length")]
@@ -130,14 +137,17 @@ plot_piano <- function(cnv_list, chromosomes = c(1:22, "X", "Y"), hide_x_lab = T
 # env$cn_purple <- prep_purple_seg(env$purple)
 # env$cn_truth <- prep_truth_seg(env$truth)
 # cnv_list <- list(truth = env$cn_truth, cnvkit = env$cn_cnvkit, facets = env$cn_facets, purple = env$cn_purple, titan = env$cn_titan)
-prep_piano <- function(cnv_list, chromosomes = c(1:22, "X", "Y")) {
+prep_piano <- function(cnv_list, chromosomes = c(1:22, "X", "Y"), seg.col = c("red", "green", "green3", "blue")) {
 
   stopifnot(rlang::is_list(cnv_list))
   stopifnot(rlang::is_dictionaryish(cnv_list))
   stopifnot(all(purrr::map_lgl(cnv_list, function(x) class(x) == "cnv")))
   stopifnot(all(chromosomes %in% c(1:22, "X", "Y")))
+  stopifnot(length(seg.col) == 4)
 
   var_names <- names(cnv_list)
+  seg.col <- seg.col %>%
+    rlang::set_names(c("del", "amp", "ampx", "def"))
 
   multicnv <- purrr::map(cnv_list, "cnv") %>%
     dplyr::bind_rows(.id = "var") %>%
@@ -145,10 +155,10 @@ prep_piano <- function(cnv_list, chromosomes = c(1:22, "X", "Y")) {
     dplyr::mutate(
       y1 = 2,
       y2 = ifelse(.data$tot_cn > 6, 7, .data$tot_cn),
-      fill = dplyr::case_when(.data$tot_cn >= 0 & .data$tot_cn < 2 ~ "red",
-                              .data$tot_cn > 2 & .data$tot_cn <= 6 ~ "green",
-                              .data$tot_cn > 6                     ~ "green3",
-                              TRUE                                 ~ "purple"),
+      fill = dplyr::case_when(.data$tot_cn >= 0 & .data$tot_cn < 2 ~ seg.col["del"],
+                              .data$tot_cn > 2 & .data$tot_cn <= 6 ~ seg.col["amp"],
+                              .data$tot_cn > 6                     ~ seg.col["ampx"],
+                              TRUE                                 ~ seg.col["def"]),
       chrom = readr::parse_factor(.data$chrom, levels = c(1:22, "X", "Y")),
       var = readr::parse_factor(.data$var, levels = var_names)) %>%
     dplyr::filter(.data$chrom %in% chromosomes)
