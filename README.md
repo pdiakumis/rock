@@ -77,9 +77,10 @@ truth <- system.file("extdata", "HCC2218_truthset_cnv_bcbio.tsv", package = "peb
 sv_manta <- prep_manta_vcf(manta)
 cn_facets <- prep_facets_seg(facets)
 cn_cnvkit <- prep_cnvkit_seg(cnvkit)
-cn_titan <- prep_titan_seg(titan)
 cn_purple <- prep_purple_seg(purple)
 cn_truth <- prep_truth_seg(truth)
+cn_titan <- prep_titan_seg(titan) # titan needs -1 for this case
+cn_titan$cnv$tot_cn <- cn_titan$cnv$tot_cn - 1
 ```
 
   - Now we can generate a circos plot with Manta links and
@@ -134,7 +135,8 @@ samples.
 <!-- end list -->
 
 ``` r
-plot_piano(list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan))
+cnv_list <- list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan)
+plot_piano(cnv_list = cnv_list)
 ```
 
 <img src="man/figures/README-piano-plot-cnvkit-facets-purple-titan1-1.png" width="100%" />
@@ -145,12 +147,21 @@ chromosomes:
 <!-- end list -->
 
 ``` r
-plot_piano(list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan),
-           chromosomes = c("1", "7", "8"),
-           hide_x_lab = FALSE)
+plot_piano(cnv_list = cnv_list, chromosomes = c("1", "7", "8"), hide_x_lab = FALSE)
 ```
 
 <img src="man/figures/README-piano-plot-chrom-1.png" width="100%" />
+
+  - Change colours of the CNV segments:
+
+<!-- end list -->
+
+``` r
+plot_piano(cnv_list = cnv_list, chromosomes = c("1", "7", "8"),
+           seg.col = c("orange", "lightblue", "blue", "pink"), hide_x_lab = FALSE)
+```
+
+<img src="man/figures/README-piano-plot-chrom-colours-1.png" width="100%" />
 
   - And even plot an ideogram of the chromosome:
 
@@ -160,7 +171,7 @@ plot_piano(list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple
 require(patchwork)
 #> Loading required package: patchwork
 plot_ideogram(chrom = "13") +
-  plot_piano(list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple), 
+  plot_piano(cnv_list = cnv_list,
              chromosomes = "13", hide_x_lab = FALSE) +
   plot_layout(ncol = 1, heights = c(1, 15))
 ```
