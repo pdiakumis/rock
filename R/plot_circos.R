@@ -7,12 +7,15 @@
 #' @param sv An `sv` object
 #' @param cnv A `cnv` object
 #' @return A circos plot with copy number variant segments
-#'   and structural variant links
+#'   and structural variant links.
 #'
 #' @examples
 #' \dontrun{
-#' sv <- prep_manta_vcf("path/to/sample.manta.vcf.gz")
-#' cnv <- prep_facets_seg("/path/to/sample.facets_emcncf.rds")
+#' manta_vcf <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
+#' cnvkit_seg <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
+#'
+#' sv <- prep_manta_vcf(manta_vcf)
+#' cnv <- prep_cnvkit_seg(cnvkit_seg)
 #'
 #' pdf("/path/to/circos1.pdf", width = 7, height = 7)
 #' plot_circos(sv = sv, cnv = cnv)
@@ -32,7 +35,7 @@ plot_circos <- function(sv = NULL, cnv = NULL) {
   # var1, var2 just dummy vars for OmicCircos
   if (!is.null(sv)) {
 
-    sv <- sv$sv %>%
+    sv_all <- sv$sv %>%
       dplyr::mutate(var1 = "var1", var2 = "var2") %>%
       dplyr::select(.data$chrom1, .data$pos1, .data$var1,
                     .data$chrom2, .data$pos2, .data$var2,
@@ -45,14 +48,14 @@ plot_circos <- function(sv = NULL, cnv = NULL) {
         TRUE                  ~ chr_colors[.data$chrom1]))
 
     # OmicCircos doesn't like tibbles...
-    svs_bnd <- sv %>% dplyr::filter(.data$svtype == "BND") %>% as.data.frame()
-    svs_other <- sv %>% dplyr::filter(.data$svtype != "BND") %>% as.data.frame()
+    svs_bnd <- sv_all %>% dplyr::filter(.data$svtype == "BND") %>% as.data.frame()
+    svs_other <- sv_all %>% dplyr::filter(.data$svtype != "BND") %>% as.data.frame()
   }
 
   #---- CNV data ----#
   if (!is.null(cnv)) {
 
-    cnv <- cnv$cnv %>%
+    cnv_all <- cnv$cnv %>%
       dplyr::mutate(
         col = dplyr::case_when(
           tot_cn == 0 ~ "red",
@@ -71,14 +74,16 @@ plot_circos <- function(sv = NULL, cnv = NULL) {
 
   OmicCircos::circos(R = 400, cir = pebbles::circos_data$db, type = "chr",
                      col = chr_colors, print.chr.lab = TRUE, W = 4)
-  if (!is.null(cnv)) {
+
+  max_cnv <- 10000
+  if (!is.null(cnv) && nrow(cnv_all) < max_cnv) {
     OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type = "arc",
-                       W = 120, mapping = cnv, col.v = 4, B = TRUE, lwd = 5,
-                       col = cnv$col, scale = FALSE)
+                       W = 120, mapping = cnv_all, col.v = 4, B = TRUE, lwd = 5,
+                       col = cnv_all$col, scale = FALSE)
   }
 
-  # Case if given both SVs and CNVs
-  if (!is.null(sv) && !is.null(cnv)) {
+  # Case if given both SVs and CNVs, and CNVs are few
+  if (!is.null(sv) && !is.null(cnv) && nrow(cnv_all) < max_cnv) {
     # some cases where no BNDs or other SVs PASS.
     if (nrow(svs_bnd) > 0) {
       OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type = "link",
@@ -92,8 +97,14 @@ plot_circos <- function(sv = NULL, cnv = NULL) {
     }
   }
 
-  # Case if given only SVs
-  if (!is.null(sv) && is.null(cnv)) {
+  # Case if given only SVs, or if given both but CNVs are many
+  if ((!is.null(sv) && is.null(cnv)) || (!is.null(sv) && !is.null(cnv) && nrow(cnv_all) >= max_cnv)) {
+
+    if (nrow(cnv_all) >= max_cnv) {
+      message(glue::glue("Not plotting copy number segments since ",
+                         "{nrow(cnv_all)} > 10,000 and OmicCircos chokes!"))
+    }
+
     # some cases where no BNDs or other SVs PASS.
     if (nrow(svs_bnd) > 0) {
       OmicCircos::circos(R = 380, cir = pebbles::circos_data$db, type = "link",

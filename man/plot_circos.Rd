@@ -13,7 +13,7 @@ plot_circos(sv = NULL, cnv = NULL)
 }
 \value{
 A circos plot with copy number variant segments
-and structural variant links
+and structural variant links.
 }
 \description{
 Generates a circos plot containing structural and copy number variants.
@@ -23,8 +23,11 @@ See the example for how to generate \code{sv} and \code{cnv} objects.
 }
 \examples{
 \dontrun{
-sv <- prep_manta_vcf("path/to/sample.manta.vcf.gz")
-cnv <- prep_facets_seg("/path/to/sample.facets_emcncf.rds")
+manta_vcf <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
+cnvkit_seg <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
+
+sv <- prep_manta_vcf(manta_vcf)
+cnv <- prep_cnvkit_seg(cnvkit_seg)
 
 pdf("/path/to/circos1.pdf", width = 7, height = 7)
 plot_circos(sv = sv, cnv = cnv)
