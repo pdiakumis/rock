@@ -82,13 +82,3 @@ plot_circos(sv = sv_manta, cnv = cn_titan)
 plot_circos(sv = sv_manta, cnv = cn_purple)
 ```
 
-## Piano Plots
-
-* We can generate 'piano' plots to compare CNV calls from multiple
-  callers or samples.
-  
-```{r piano-plot-cnvkit-facets-purple-titan1, fig.width=8, fig.height=7}
-plot_piano(list(cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan))
-```
-  
-  
