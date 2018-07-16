@@ -30,7 +30,6 @@ You can do the following:
 * [Circos Plots](#circos-plots)
     * [Manta with CNVkit](#manta-with-cnvkit)
     * [Manta with PURPLE](#manta-with-purple)
-* [Piano Plots](#piano-plots)
 
 <!-- vim-markdown-toc -->
 
@@ -44,6 +43,7 @@ You can install the development version of `rock` from
 devtools::install_github("umccr/rock") # master version
 devtools::install_github("umccr/rock@v1.2.3") # release v1.2.3
 devtools::install_github("umccr/rock@abcd") # commit abcd
+devtools::install_github("umccr/rock", ref = "umccrise") # umccrise branch
 ```
 
 There is no CRAN or conda version (yet).
@@ -125,55 +125,3 @@ plot_circos(sv = sv_manta, cnv = cn_purple)
 ```
 
 <img src="man/figures/README-circos-plot-manta-purple-1.png" width="100%" />
-
-## Piano Plots
-
-  - We can generate ‘piano’ plots to compare CNV calls from multiple
-    callers or
-samples.
-
-<!-- end list -->
-
-``` r
-cnv_list <- list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan)
-plot_piano(cnv_list = cnv_list)
-```
-
-<img src="man/figures/README-piano-plot-cnvkit-facets-purple-titan1-1.png" width="100%" />
-
-  - You can also zoom into
-chromosomes:
-
-<!-- end list -->
-
-``` r
-plot_piano(cnv_list = cnv_list, chromosomes = c("1", "7", "8"), hide_x_lab = FALSE)
-```
-
-<img src="man/figures/README-piano-plot-chrom-1.png" width="100%" />
-
-  - Change colours of the CNV segments:
-
-<!-- end list -->
-
-``` r
-plot_piano(cnv_list = cnv_list, chromosomes = c("1", "7", "8"),
-           seg.col = c("orange", "lightblue", "blue", "pink"), hide_x_lab = FALSE)
-```
-
-<img src="man/figures/README-piano-plot-chrom-colours-1.png" width="100%" />
-
-  - And even plot an ideogram of the chromosome:
-
-<!-- end list -->
-
-``` r
-require(patchwork)
-#> Loading required package: patchwork
-plot_ideogram(chrom = "13") +
-  plot_piano(cnv_list = cnv_list,
-             chromosomes = "13", hide_x_lab = FALSE) +
-  plot_layout(ncol = 1, heights = c(1, 15))
-```
-
-<img src="man/figures/README-piano-plot-chrom-ideo-1.png" width="100%" />
