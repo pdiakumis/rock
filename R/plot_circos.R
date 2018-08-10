@@ -64,6 +64,8 @@ plot_circos <- function(sv = NULL, cnv = NULL) {
           tot_cn >= 3 ~ "green",
           TRUE    ~ "black")) %>%
       as.data.frame()
+  } else {
+    cnv_all <- data.frame() # need to keep the logic happy
   }
 
   #---- Circos Plot ----#
