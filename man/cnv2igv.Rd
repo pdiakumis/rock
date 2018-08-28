@@ -8,7 +8,7 @@ cnv2igv(cnv, out_file = NULL, track_name = "cnv_segs", col1 = "darkgreen",
   col2 = "red", autoscale = "on")
 }
 \arguments{
-\item{cnv}{Object of class \code{cnv}. See examples.}
+\item{cnv}{Either a BED file with \code{chrom}, \code{start}, \code{end} and \code{tot_cn} columns, or a \code{cnv} object.}
 
 \item{out_file}{Path to write output to. \strong{Needs to have a \code{bedgraph} suffix}.}
 

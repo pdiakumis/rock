@@ -4,7 +4,7 @@
 #' [bedgraph](http://genome.ucsc.edu/goldenPath/help/bedgraph.html) file for viewing
 #' in [IGV](http://software.broadinstitute.org/software/igv/).
 #'
-#' @param cnv Object of class `cnv`. See examples.
+#' @param cnv Either a BED file with `chrom`, `start`, `end` and `tot_cn` columns, or a `cnv` object.
 #' @param out_file Path to write output to. **Needs to have a `bedgraph` suffix**.
 #' @param track_name Name of track to appear in IGV (default: "cnv_segs").
 #' @param col1 Colour name for amplifications (default: darkgreen)
@@ -31,13 +31,35 @@
 #' @export
 cnv2igv <- function(cnv, out_file = NULL, track_name = "cnv_segs", col1 = "darkgreen", col2 = "red", autoscale = "on") {
 
-  stopifnot(class(cnv) == "cnv")
+  if (class(cnv) != "cnv") {
+    if (!file.exists(cnv)) {
+      stop("cnv needs to be either a cnv object or an existing BED file!")
+    }
+  }
   stopifnot(!is.null(out_file), grepl(".bedgraph$", out_file))
   stopifnot(length(col1) == 1, length(col2) == 1)
   stopifnot(autoscale %in% c("on", "off"))
 
+  if (class(cnv) != "cnv") {
+    # cnv is a BED
+    # check if there's a header
+    cnames <- c("chrom", "start", "end", "tot_cn")
+    try_head <- readr::read_lines(cnv, n_max = 1)
+    if (grepl("start", try_head)) {
+      cnv <- readr::read_tsv(cnv, col_types = "ciid") %>%
+        purrr::set_names(cnames)
+    } else {
+      cnv <- readr::read_tsv(cnv, col_types = "ciid", col_names = cnames)
+    }
+    cnv <- cnv %>% dplyr::filter(.data$chrom != "MT")
+    cnv <- structure(list(cnv = cnv), class = "cnv")
+
+  }
+
   cnv <- cnv$cnv %>%
-    dplyr::mutate(tot_cn = .data$tot_cn - 2)
+    dplyr::mutate(tot_cn = .data$tot_cn - 2,
+                  tot_cn = round(.data$tot_cn, 2))
+
 
   col1 <- grDevices::col2rgb(col1) %>% paste(collapse = ",")
   col2 <- grDevices::col2rgb(col2) %>% paste(collapse = ",")
