@@ -20,7 +20,11 @@ You can do the following:
     The OmicCircos R package is used.
 
   - Create CNV profiles in horizontal facets for multiple samples or
-    callers (piano plots)
+    callers (piano plots). Can also zoom into specific chromosomes, and
+    include an ideogram when specifying a single chromosome.
+
+  - Generate bedgraph files for viewing the copy number segments in
+    [IGV](http://software.broadinstitute.org/software/igv/).
 
 ## Contents
 
@@ -31,6 +35,7 @@ You can do the following:
     * [Manta with CNVkit](#manta-with-cnvkit)
     * [Manta with PURPLE](#manta-with-purple)
 * [Piano Plots](#piano-plots)
+* [View CNV segments in IGV](#view-cnv-segments-in-igv)
 
 <!-- vim-markdown-toc -->
 
@@ -141,7 +146,7 @@ plot_piano(cnv_list = cnv_list)
 
 <img src="man/figures/README-piano-plot-cnvkit-facets-purple-titan1-1.png" width="100%" />
 
-  - You can also zoom into
+  - You can also zoom into specific
 chromosomes:
 
 <!-- end list -->
@@ -177,3 +182,17 @@ plot_ideogram(chrom = "13") +
 ```
 
 <img src="man/figures/README-piano-plot-chrom-ideo-1.png" width="100%" />
+
+## View CNV segments in IGV
+
+``` r
+cn_fname <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
+cnv <- prep_purple_seg(cn_fname)
+cnv2igv(cnv, out_file = "~/Desktop/tmp/cnv_segs4igv.bedgraph", track_name = "cnv_segs2")
+```
+
+``` r
+knitr::include_graphics("man/figures/README-cnv2igv_output.png")
+```
+
+<img src="man/figures/README-cnv2igv_output.png" width="100%" />

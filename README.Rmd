@@ -31,7 +31,13 @@ You can do the following:
   [PURPLE](https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator).
   The OmicCircos R package is used.
 
-* Create CNV profiles in horizontal facets for multiple samples or callers (piano plots)
+* Create CNV profiles in horizontal facets for multiple samples or callers (piano plots).
+  Can also zoom into specific chromosomes, and include an ideogram when specifying
+  a single chromosome.
+* Generate bedgraph files for viewing the copy number segments 
+  in [IGV](http://software.broadinstitute.org/software/igv/).
+
+
 
 ## Contents
 
@@ -116,7 +122,7 @@ cnv_list <- list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purpl
 plot_piano(cnv_list = cnv_list)
 ```
   
-* You can also zoom into chromosomes:
+* You can also zoom into specific chromosomes:
 
 ```{r piano-plot-chrom, fig.width=10, fig.height=7}
 plot_piano(cnv_list = cnv_list, chromosomes = c("1", "7", "8"), hide_x_lab = FALSE)
@@ -140,3 +146,15 @@ plot_ideogram(chrom = "13") +
 ```
 
   
+## View CNV segments in IGV
+
+```{r prep-cnv2igv, eval=FALSE}
+cn_fname <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
+cnv <- prep_purple_seg(cn_fname)
+cnv2igv(cnv, out_file = "~/Desktop/tmp/cnv_segs4igv.bedgraph", track_name = "cnv_segs2")
+```
+
+```{r cnv2igv}
+knitr::include_graphics("man/figures/README-cnv2igv_output.png")
+```
+
