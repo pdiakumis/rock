@@ -2,6 +2,7 @@
 
 export("%>%")
 export(cnv2gr)
+export(cnv2igv)
 export(enquo)
 export(hello)
 export(plot_circos)
