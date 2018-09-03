@@ -2,13 +2,13 @@
 #'
 #' Exports an object of class `cnv` to a
 #' [bedgraph](http://genome.ucsc.edu/goldenPath/help/bedgraph.html) file for viewing
-#' in [IGV](http://software.broadinstitute.org/software/igv/).
+#' in [IGV](http://software.broadinstitute.org/software/igv/) as bars.
 #'
 #' @param cnv Either a BED file with `chrom`, `start`, `end` and `tot_cn` columns, or a `cnv` object.
 #' @param out_file Path to write output to. **Needs to have a `bedgraph` suffix**.
 #' @param track_name Name of track to appear in IGV (default: "cnv_segs").
-#' @param col1 Colour name for amplifications (default: darkgreen)
-#' @param col2 Colour name for deletions (default: red)
+#' @param col1 Colour name for amplifications (default: darkgreen).
+#' @param col2 Colour name for deletions (default: red).
 #' @param autoscale With autoscaling on, IGV automatically adjusts the
 #'   plot Y scale to the data range currently in view.
 #'   As the user pans and moves, this scaling continually adjusts.
@@ -68,4 +68,64 @@ cnv2igv <- function(cnv, out_file = NULL, track_name = "cnv_segs", col1 = "darkg
   readr::write_tsv(x = cnv, path = out_file, append = TRUE)
 
   invisible(list(header = track_head, cnv = cnv))
+}
+
+#' Export BED values for IGV Viewing
+#'
+#' Given a BED-like file with chromosome, start, end and value columns,
+#' export a properly formatted file for viewing the values as a scatter plot
+#' in [IGV](http://software.broadinstitute.org/software/igv/). Note that
+#' `start` needs to be equal to `end`, since we're looking at specific SNPs,
+#' not segments.
+#'
+#' @param bed BED file with `chrom`, `start`, `end` and `value` columns.
+#' @param out_file Path to write output to. **Needs to have an `igv` suffix**.
+#' @param track_name Name of track to appear in IGV (default: "val").
+#' @param col Colour name for the points (default: blue).
+#'
+#' @return Invisible list with the modified BED file and the track header, where:
+#'   * `chrom`: chromosome
+#'   * `start`: start coordinate
+#'   * `end`: end coordinate
+#'   * `name`: just an ID for the row (`chrom:start-end`)
+#'   * `val`: value
+#'   * `header`: track information
+#'
+#' @examples
+#' \dontrun{
+#' bed <- system.file("extdata", "COLO829_chr21_baf.tsv", package = "pebbles")
+#' bedval2igv(bed, out_file = "~/Desktop/tmp/baf1.igv", track_name = "colo829_baf", col = "red")
+#' }
+#'
+#' @export
+#'
+bedval2igv <- function(bed, out_file = NULL, track_name = "val", col = "purple") {
+  stopifnot(file.exists(bed))
+  stopifnot(!is.null(out_file), grepl(".igv$", out_file))
+  stopifnot(length(col) == 1)
+  stopifnot(is.character(track_name))
+
+  # check if there's a header
+  cnames <- c("chrom", "start", "end", "value")
+  try_head <- readr::read_lines(bed, n_max = 1)
+  if (grepl("start", try_head)) {
+    bed <- readr::read_tsv(bed, col_types = "ciid") %>%
+      purrr::set_names(cnames)
+  } else {
+    bed <- readr::read_tsv(bed, col_types = "ciid", col_names = cnames)
+  }
+
+
+  bed <- bed %>%
+    dplyr::mutate(value = round(.data$value, 2),
+                  name = glue::glue("chr{chrom}:{start}-{end}")) %>%
+    dplyr::select(.data$chrom, .data$start, .data$end, .data$name, .data$value)
+
+
+  col <- grDevices::col2rgb(col) %>% paste(collapse = ",")
+  track_head <- glue::glue("#track type=IGV graphType=points name={track_name} color={col}")
+  readr::write_lines(x = track_head, path = out_file)
+  readr::write_tsv(x = bed, path = out_file, append = TRUE)
+
+  invisible(list(header = track_head, bed = bed))
 }
