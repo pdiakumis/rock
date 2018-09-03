@@ -80,7 +80,7 @@ read_manta_vcf <- function(vcf) {
 
 #' Prepare Manta VCF for Circos
 #'
-#' Prepares a Manta VCF for display in a circos plot.
+#' Prepares a Manta VCF for display in an OmicCircos plot.
 #'
 #' This function uses vcfR (https://github.com/knausb/vcfR) or
 #' bcftools (https://samtools.github.io/bcftools/bcftools.html) to read in the VCF file.
@@ -160,3 +160,60 @@ prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
 }
 
 
+#' Prepare Manta VCF for Perl Circos
+#'
+#' Prepares a Manta VCF for display in a Perl circos plot.
+#'
+#' @inheritParams prep_manta_vcf
+#' @param ... Additional arguments for `prep_manta_vcf`.
+#' @return A dataframe (`tibble`) with the following fields from the VCF:
+#'   * chrom1: hs`CHROM`
+#'   * pos1: `POS` | `INFO/BPI_START`
+#'   * pos1b: `POS` | `INFO/BPI_START`
+#'   * chrom2: `CHROM` (for mate2 if BND)
+#'   * pos2: `INFO/END` | `INFO/BPI_END` (for mate1 if BND)
+#'   * pos2b: `INFO/END` | `INFO/BPI_END` (for mate1 if BND)
+#'   * col: link colour
+#'
+#' @export
+#' @examples
+#' vcf <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
+#' prep_manta_vcf2(vcf)
+prep_manta_vcf2 <- function(vcf, ...) {
+  sv <- prep_manta_vcf(vcf, ...)$sv
+
+  min_chrom <- function(chr1, chr2) {
+    gtools::mixedsort(c(chr1, chr2))[1]
+  }
+
+  min_chrom_v <- Vectorize(min_chrom)
+
+  chr_cols <- c(hs1 = '(153,102,0)', hs2 = '(102,102,0)', hs3 = '(153,153,30)',
+                hs4 = '(204,0,0)', hs5 = '(255,0,0)', hs6 = '(255,0,204)',
+                hs7 = '(255,204,204)', hs8 = '(255,153,0)', hs9 = '(255,204,0)',
+                hs10 = '(255,255,0)', hs11 = '(204,255,0)', hs12 = '(0,255,0)',
+                hs13 = '(53,128,0)', hs14 = '(0,0,204)', hs15 = '(102,153,255)',
+                hs16 = '(153,204,255)', hs17 = '(0,255,255)', hs18 = '(204,255,255)',
+                hs19 = '(153,0,204)', hs20 = '(204,51,255)', hs21 = '(204,153,255)',
+                hs22 = '(102,102,102)', hsX = '(153,153,153)', hsY = '(204,204,204)')
+
+  stopifnot(length(chr_cols) == 24)
+
+  links_coloured <- sv %>%
+    dplyr::mutate(chrom1 = paste0("hs", .data$chrom1),
+                  chrom2 = paste0("hs", .data$chrom2)) %>%
+    dplyr::mutate(min_chrom = min_chrom_v(.data$chrom1, .data$chrom2)) %>%
+    dplyr::mutate(col = dplyr::case_when(
+      svtype == "DEL" ~ '(255,0,0)',
+      svtype == "DUP" ~ '(0,255,0)',
+      svtype == "INS" ~ '(255,0,255)',
+      svtype == "INV" ~ '(255,165,0)',
+      svtype == "BND" ~ chr_cols[min_chrom],
+      TRUE ~ '0,0,0')) %>%
+    dplyr::mutate(pos1b = .data$pos1,
+                  pos2b = .data$pos2,
+                  col = paste0('color=', col)) %>%
+    dplyr::select(.data$chrom1, .data$pos1, .data$pos1b, .data$chrom2, .data$pos2, .data$pos2b, .data$col)
+
+  links_coloured
+}

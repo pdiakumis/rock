@@ -17,6 +17,7 @@ Imports:
     GenomicRanges,
     ggplot2,
     glue,
+    gtools,
     OmicCircos,
     pebbles,
     purrr,
@@ -27,7 +28,7 @@ Imports:
     tidyr,
     vcfR
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Suggests: 
     covr,
     knitr,
