@@ -22,7 +22,8 @@ A \code{cnv} list containing a dataframe (\code{tibble}) with the following colu
 Reads the CNV segment TSV file output by CNVkit, FACETS, PURPLE or TitanCNA.
 }
 \examples{
-fn <- list.files(system.file("extdata", package = "pebbles"), full.name = TRUE)
-read_cnv(fn[1])
+
+fn <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
+cnv <- read_cnv(fn)
 
 }

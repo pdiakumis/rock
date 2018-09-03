@@ -14,9 +14,9 @@ cnv2igv(cnv, out_file = NULL, track_name = "cnv_segs", col1 = "darkgreen",
 
 \item{track_name}{Name of track to appear in IGV (default: "cnv_segs").}
 
-\item{col1}{Colour name for amplifications (default: darkgreen)}
+\item{col1}{Colour name for amplifications (default: darkgreen).}
 
-\item{col2}{Colour name for deletions (default: red)}
+\item{col2}{Colour name for deletions (default: red).}
 
 \item{autoscale}{With autoscaling on, IGV automatically adjusts the
 plot Y scale to the data range currently in view.
@@ -36,7 +36,7 @@ Invisible list with the modified \code{cnv} object and the track header, where:
 \description{
 Exports an object of class \code{cnv} to a
 \href{http://genome.ucsc.edu/goldenPath/help/bedgraph.html}{bedgraph} file for viewing
-in \href{http://software.broadinstitute.org/software/igv/}{IGV}.
+in \href{http://software.broadinstitute.org/software/igv/}{IGV} as bars.
 }
 \examples{
 \dontrun{

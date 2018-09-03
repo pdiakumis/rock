@@ -10,8 +10,9 @@
 #'   * tot_cn: total copy number estimate
 #'
 #' @examples
-#' fn <- list.files(system.file("extdata", package = "pebbles"), full.name = TRUE)
-#' read_cnv(fn[1])
+#'
+#' fn <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
+#' cnv <- read_cnv(fn)
 #'
 #' @export
 read_cnv <- function(cnv) {
