@@ -167,7 +167,7 @@ prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
 #' @inheritParams prep_manta_vcf
 #' @param ... Additional arguments for `prep_manta_vcf`.
 #' @return A dataframe (`tibble`) with the following fields from the VCF:
-#'   * chrom1: hs`CHROM`
+#'   * chrom1: homo sapiens `CHROM`
 #'   * pos1: `POS` | `INFO/BPI_START`
 #'   * pos1b: `POS` | `INFO/BPI_START`
 #'   * chrom2: `CHROM` (for mate2 if BND)

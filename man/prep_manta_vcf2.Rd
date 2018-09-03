@@ -14,7 +14,7 @@ prep_manta_vcf2(vcf, ...)
 \value{
 A dataframe (\code{tibble}) with the following fields from the VCF:
 \itemize{
-\item chrom1: hs\code{CHROM}
+\item chrom1: homo sapiens \code{CHROM}
 \item pos1: \code{POS} | \code{INFO/BPI_START}
 \item pos1b: \code{POS} | \code{INFO/BPI_START}
 \item chrom2: \code{CHROM} (for mate2 if BND)

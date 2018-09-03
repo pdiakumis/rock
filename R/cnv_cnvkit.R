@@ -28,3 +28,28 @@ prep_cnvkit_seg <- function(cnvkit) {
   structure(list(cnv = cnv), class = "cnv")
 
 }
+
+#' Prepare CNVkit Segments for Perl Circos
+#'
+#' Reads the `sample-call.cns` file output by CNVkit and exports the
+#' CNV segment coordinates for plotting in Perl Circos.
+#'
+#' @param cnvkit Path to CNVkit `sample-call.cns` file.
+#' @return A dataframe (`tibble`) with the following columns:
+#'   * chrom: homo sapiens chromosome
+#'   * start: start coordinate
+#'   * end: end coordinate
+#'   * value: total copy number estimate
+#'
+#' @examples
+#' cn <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
+#' prep_cnvkit_circos(cn)
+#'
+#' @export
+prep_cnvkit_circos <- function(cnvkit) {
+
+  cnv <- prep_cnvkit_seg(cnvkit)$cnv
+  cnv %>%
+    dplyr::mutate(chrom = paste0("hs", .data$chrom)) %>%
+    dplyr::rename(value = .data$tot_cn)
+}
