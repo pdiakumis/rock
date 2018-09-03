@@ -4,8 +4,8 @@
 \alias{cnv2igv}
 \title{Export CNV Segments for IGV Viewing}
 \usage{
-cnv2igv(cnv, out_file = NULL, track_name = "cnv_segs", col1 = "darkgreen",
-  col2 = "red", autoscale = "on")
+cnv2igv(cnv, out_file = NULL, track_name = "cnv_segs",
+  col1 = "darkgreen", col2 = "red", autoscale = "on")
 }
 \arguments{
 \item{cnv}{Either a BED file with \code{chrom}, \code{start}, \code{end} and \code{tot_cn} columns, or a \code{cnv} object.}
