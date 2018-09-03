@@ -24,7 +24,10 @@ You can do the following:
     include an ideogram when specifying a single chromosome.
 
   - Generate bedgraph files for viewing the copy number segments in
-    [IGV](http://software.broadinstitute.org/software/igv/).
+    [IGV](http://software.broadinstitute.org/software/igv/) as a bar
+    plot.
+
+  - Generate IGV files for viewing SNP values in IGV as a scatter plot.
 
 ## Contents
 
@@ -36,6 +39,7 @@ You can do the following:
     * [Manta with PURPLE](#manta-with-purple)
 * [Piano Plots](#piano-plots)
 * [View CNV segments in IGV](#view-cnv-segments-in-igv)
+* [View BED values in IGV](#view-bed-values-in-igv)
 
 <!-- vim-markdown-toc -->
 
@@ -187,7 +191,7 @@ plot_ideogram(chrom = "13") +
 
 ``` r
 cn_fname <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
-cnv <- prep_purple_seg(cn_fname)
+cnv <- read_cnv(cn_fname)
 cnv2igv(cnv, out_file = "~/Desktop/tmp/cnv_segs4igv.bedgraph", track_name = "cnv_segs2")
 ```
 
@@ -196,3 +200,17 @@ knitr::include_graphics("man/figures/README-cnv2igv_output.png")
 ```
 
 <img src="man/figures/README-cnv2igv_output.png" width="100%" />
+
+## View BED values in IGV
+
+``` r
+bed <- system.file("extdata", "COLO829_chr21_baf.tsv", package = "pebbles")
+bedval2igv(bed, out_file = "~/Desktop/tmp/baf1.igv", track_name = "colo829_baf", col = "purple")
+```
+
+``` r
+# example for whole-genome BAFs
+knitr::include_graphics("man/figures/README-bedval2igv_output.png")
+```
+
+<img src="man/figures/README-bedval2igv_output.png" width="100%" />
