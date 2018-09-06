@@ -15,7 +15,7 @@ A dataframe (\code{tibble}) with the following columns:
 \item chrom: homo sapiens chromosome
 \item start: start coordinate
 \item end: end coordinate
-\item value: total copy number estimate
+\item value: total copy number estimate, minus 2
 }
 }
 \description{

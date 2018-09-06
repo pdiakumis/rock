@@ -39,7 +39,7 @@ prep_cnvkit_seg <- function(cnvkit) {
 #'   * chrom: homo sapiens chromosome
 #'   * start: start coordinate
 #'   * end: end coordinate
-#'   * value: total copy number estimate
+#'   * value: total copy number estimate, minus 2
 #'
 #' @examples
 #' cn <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
@@ -50,6 +50,7 @@ prep_cnvkit_circos <- function(cnvkit) {
 
   cnv <- prep_cnvkit_seg(cnvkit)$cnv
   cnv %>%
-    dplyr::mutate(chrom = paste0("hs", .data$chrom)) %>%
+    dplyr::mutate(chrom = paste0("hs", .data$chrom),
+                  tot_cn = .data$tot_cn - 2) %>%
     dplyr::rename(value = .data$tot_cn)
 }
