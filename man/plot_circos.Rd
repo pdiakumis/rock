@@ -12,11 +12,11 @@ plot_circos(sv = NULL, cnv = NULL)
 \item{cnv}{A \code{cnv} object}
 }
 \value{
-A circos plot with copy number variant segments
+An OmicCircos circos plot with copy number variant segments
 and structural variant links.
 }
 \description{
-Generates a circos plot containing structural and copy number variants.
+Generates an OmicCircos circos plot containing structural and copy number variants.
 }
 \details{
 See the example for how to generate \code{sv} and \code{cnv} objects.
