@@ -17,7 +17,8 @@ You can do the following:
     [FACETS](https://github.com/mskcc/facets),
     [TitanCNA](https://github.com/gavinha/TitanCNA) or
     [PURPLE](https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator).
-    The OmicCircos R package is used.
+    The OmicCircos R package is used. You can also use the Perl circos
+    tool for Manta with CNVkit.
 
   - Create CNV profiles in horizontal facets for multiple samples or
     callers (piano plots). Can also zoom into specific chromosomes, and
@@ -35,8 +36,10 @@ You can do the following:
 
 * [Installation](#installation)
 * [Circos Plots](#circos-plots)
-    * [Manta with CNVkit](#manta-with-cnvkit)
-    * [Manta with PURPLE](#manta-with-purple)
+    * [Perl Circos](#perl-circos)
+    * [OmicCircos](#omiccircos)
+        * [Manta with CNVkit](#manta-with-cnvkit)
+        * [Manta with PURPLE](#manta-with-purple)
 * [Piano Plots](#piano-plots)
 * [View CNV segments in IGV](#view-cnv-segments-in-igv)
 * [View BED values in IGV](#view-bed-values-in-igv)
@@ -64,6 +67,56 @@ require(rock)
 ```
 
 ## Circos Plots
+
+### Perl Circos
+
+  - We can generate circos plots using the original
+    [circos](http://circos.ca/) software package, written in Perl.
+    **Note**: `circos` needs to be installed in your `PATH`.
+
+  - Start by preparing the Manta and CNVkit calls. The required input
+    files will be written to
+`outdir`:
+
+<!-- end list -->
+
+``` r
+manta <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
+cnvkit <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
+outdir <- "man/figures/perl_circos"
+circos_prep(outdir = outdir, manta = manta, cnvkit = cnvkit)
+#> Warning in dir.create(outdir, recursive = TRUE): 'man/figures/perl_circos'
+#> already exists
+#> Exporting Manta and CNVkit circos files to 'man/figures/perl_circos'.
+#> Copying circos templates to 'man/figures/perl_circos'.
+#> [1] TRUE
+```
+
+  - Then execute the following `circos` command either on the command
+    line, or via the `plot_circos2`
+function:
+
+<!-- end list -->
+
+``` bash
+circos -nosvg -conf <outdir>/circos_simple.conf -outputdir <outdir> -outputfile foo_circos_cnvkit_manta.png
+```
+
+``` r
+plot_circos2(outdir = outdir, name = "foo")
+```
+
+  - Result:
+
+<!-- end list -->
+
+``` r
+knitr::include_graphics("man/figures/perl_circos/foo_circos_cnvkit_manta.png")
+```
+
+<img src="man/figures/perl_circos/foo_circos_cnvkit_manta.png" width="100%" />
+
+### OmicCircos
 
   - We can generate circos plots using the functionality available in
     the
@@ -109,7 +162,7 @@ cn_titan$cnv$tot_cn <- cn_titan$cnv$tot_cn - 1
           - Insertions: Purple
           - Inversions: Orange
 
-### Manta with CNVkit
+#### Manta with CNVkit
 
 ``` r
 plot_circos(sv = sv_manta, cnv = cn_cnvkit)
@@ -122,7 +175,7 @@ plot_circos(sv = sv_manta, cnv = cn_cnvkit)
 
 <img src="man/figures/README-circos-plot-manta-cnvkit-1.png" width="100%" />
 
-### Manta with PURPLE
+#### Manta with PURPLE
 
 ``` r
 plot_circos(sv = sv_manta, cnv = cn_purple)
@@ -204,12 +257,12 @@ knitr::include_graphics("man/figures/README-cnv2igv_output.png")
 ## View BED values in IGV
 
 ``` r
-bed <- system.file("extdata", "COLO829_chr21_baf.tsv", package = "pebbles")
-bedval2igv(bed, out_file = "~/Desktop/tmp/baf1.igv", track_name = "colo829_baf", col = "purple")
+bed <- system.file("extdata", "HCC2218_baf.tsv", package = "pebbles")
+bedval2igv(bed, out_file = "~/Desktop/tmp/baf1.igv", track_name = "baf", col = "purple")
 ```
 
 ``` r
-# example for whole-genome BAFs
+# example for COLO829 whole-genome BAFs
 knitr::include_graphics("man/figures/README-bedval2igv_output.png")
 ```
 
