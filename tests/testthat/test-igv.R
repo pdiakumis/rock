@@ -4,7 +4,7 @@ cn_fname <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles"
 cnv <- prep_purple_seg(cn_fname)
 igv <- cnv2igv(cnv, out_file = tempfile(fileext = "bedgraph"))
 
-bed <- system.file("extdata", "COLO829_chr21_baf.tsv", package = "pebbles")
+bed <- system.file("extdata", "HCC2218_baf.tsv", package = "pebbles")
 igv2 <- bedval2igv(bed, out_file = tempfile(fileext = "igv"), track_name = "colo829_baf", col = "red")
 
 test_that("igv output has correct dim", {

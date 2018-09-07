@@ -35,8 +35,8 @@ not segments.
 }
 \examples{
 \dontrun{
-bed <- system.file("extdata", "COLO829_chr21_baf.tsv", package = "pebbles")
-bedval2igv(bed, out_file = "~/Desktop/tmp/baf1.igv", track_name = "colo829_baf", col = "red")
+bed <- system.file("extdata", "HCC2218_baf.tsv", package = "pebbles")
+bedval2igv(bed, out_file = "~/Desktop/tmp/baf1.igv", track_name = "hcc2218_baf", col = "red")
 }
 
 }
