@@ -17,34 +17,13 @@
 #' @export
 prep_purple_seg <- function(purple) {
 
-  cnv <- read_purple_seg(purple) %>%
-    dplyr::select(.data$chrom, .data$start, .data$end, .data$tot_cn) %>%
-    dplyr::filter(.data$chrom != "MT")
-
-  structure(list(cnv = cnv), class = "cnv")
-}
-
-# read PURPLE cnv file
-read_purple_seg <- function(purple) {
-
   stopifnot(file.exists(purple))
 
   cnv <- readr::read_tsv(purple, col_types = "ciididdccc") %>%
     dplyr::rename(chrom = .data$`#chromosome`,
-                  tot_cn = .data$copyNumber)
+                  tot_cn = .data$copyNumber) %>%
+    dplyr::select(.data$chrom, .data$start, .data$end, .data$tot_cn) %>%
+    dplyr::filter(.data$chrom != "MT")
 
-  return(cnv)
-
-}
-
-# read PURPLE fitted file
-# cn <- system.file("extdata", "HCC2218_purple.fitted.tsv", package = "pebbles")
-# read_purple_fitted(cn)
-read_purple_fitted <- function(purple) {
-  stopifnot(file.exists(purple))
-
-  cnv <- readr::read_tsv(purple, col_types = "ciicddddddddddddddccdddcd") %>%
-    dplyr::rename(chrom = .data$`#chromosome`)
-
-  return(cnv)
+  structure(list(cnv = cnv), class = "cnv")
 }

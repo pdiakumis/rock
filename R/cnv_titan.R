@@ -17,37 +17,39 @@
 #' @export
 prep_titan_seg <- function(titan) {
 
+  # translate Titan call to SV type
+  .titan_get_sv_type <- function(x) {
+    titan_calls <- c(HOMD  = "DEL", DLOH  = "DEL", NLOH  = "LOH", HET   = "CNV",
+                     ALOH  = "DUP", GAIN  = "DUP", ASCNA = "DUP", BCNA  = "DUP",
+                     UBCNA = "DUP", OUT   = "CNV")
+    stopifnot(all(x %in% names(titan_calls)))
+    unname(titan_calls[x])
+  }
+
+
+  read_titan_seg <- function(titan) {
+
+    stopifnot(file.exists(titan))
+
+    cnv <- readr::read_tsv(titan, col_types = "cciiidcdiciiiid") %>%
+      dplyr::select(.data$Chromosome, .data$Start_Position.bp., .data$End_Position.bp., .data$Copy_Number,
+                    .data$Median_logR, .data$TITAN_call) %>%
+      dplyr::mutate(sv_type = .titan_get_sv_type(.data$TITAN_call)) %>%
+      dplyr::rename(chrom = .data$Chromosome,
+                    start = .data$Start_Position.bp.,
+                    end = .data$End_Position.bp.,
+                    tot_cn = .data$Copy_Number)
+
+    return(cnv)
+  }
+
+
   cnv <- read_titan_seg(titan) %>%
     dplyr::select(.data$chrom, .data$start, .data$end, .data$tot_cn) %>%
     dplyr::filter(.data$chrom != "MT")
 
+
   structure(list(cnv = cnv), class = "cnv")
-}
 
-# read titan seg file
-read_titan_seg <- function(titan) {
-
-  stopifnot(file.exists(titan))
-
-  cnv <- readr::read_tsv(titan, col_types = "cciiidcdiciiiid") %>%
-    dplyr::select(.data$Chromosome, .data$Start_Position.bp., .data$End_Position.bp., .data$Copy_Number,
-                  .data$Median_logR, .data$TITAN_call) %>%
-    dplyr::mutate(sv_type = .titan_get_sv_type(.data$TITAN_call)) %>%
-    dplyr::rename(chrom = .data$Chromosome,
-                  start = .data$Start_Position.bp.,
-                  end = .data$End_Position.bp.,
-                  tot_cn = .data$Copy_Number)
-
-  return(cnv)
-
-}
-
-# translate Titan call to SV type
-.titan_get_sv_type <- function(x) {
-  titan_calls <- c(HOMD  = "DEL", DLOH  = "DEL", NLOH  = "LOH", HET   = "CNV",
-                   ALOH  = "DUP", GAIN  = "DUP", ASCNA = "DUP", BCNA  = "DUP",
-                   UBCNA = "DUP", OUT   = "CNV")
-  stopifnot(all(x %in% names(titan_calls)))
-  unname(titan_calls[x])
 }
 
