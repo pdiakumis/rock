@@ -4,3 +4,7 @@
 inst/doc
 tmp/
 .DS_Store
+
+man/figures/perl_circos/*
+!man/figures/perl_circos/foo_circos_cnvkit_manta.png
+

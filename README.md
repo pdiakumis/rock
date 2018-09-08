@@ -17,21 +17,20 @@ You can do the following:
     [FACETS](https://github.com/mskcc/facets),
     [TitanCNA](https://github.com/gavinha/TitanCNA) or
     [PURPLE](https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator).
-    The OmicCircos R package is used.
+    The OmicCircos R package is used. You can also use the Perl circos
+    tool for Manta with CNVkit.
 
   - Create CNV profiles in horizontal facets for multiple samples or
-    callers (piano plots)
+    callers (piano plots). Can also zoom into specific chromosomes, and
+    include an ideogram when specifying a single chromosome.
+
+  - Generate bedgraph files for viewing the copy number segments in
+    [IGV](http://software.broadinstitute.org/software/igv/) as a bar
+    plot.
+
+  - Generate IGV files for viewing SNP values in IGV as a scatter plot.
 
 ## Contents
-
-<!-- vim-markdown-toc GFM -->
-
-* [Installation](#installation)
-* [Circos Plots](#circos-plots)
-    * [Manta with CNVkit](#manta-with-cnvkit)
-    * [Manta with PURPLE](#manta-with-purple)
-
-<!-- vim-markdown-toc -->
 
 ## Installation
 
@@ -51,10 +50,60 @@ There is no CRAN or conda version (yet).
 Then just load with:
 
 ``` r
-require(rock)
+require(rock, lib.loc = "~/rock/umccrise")
 ```
 
 ## Circos Plots
+
+### Perl Circos
+
+  - We can generate circos plots using the original
+    [circos](http://circos.ca/) software package, written in Perl.
+    **Note**: `circos` needs to be installed in your `PATH`.
+
+  - Start by preparing the Manta and CNV calls. The required input files
+    will be written to
+`outdir`:
+
+<!-- end list -->
+
+``` r
+manta <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
+cnv <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
+outdir <- "man/figures/perl_circos"
+circos_prep(outdir = outdir, manta = manta, cnv = cnv)
+#> Warning in dir.create(outdir, recursive = TRUE): 'man/figures/perl_circos'
+#> already exists
+#> Exporting Manta and CNV circos files to 'man/figures/perl_circos'.
+#> Copying circos templates to 'man/figures/perl_circos'.
+#> [1] TRUE
+```
+
+  - Then execute the following `circos` command either on the command
+    line, or via the `plot_circos2`
+function:
+
+<!-- end list -->
+
+``` bash
+circos -nosvg -conf <outdir>/circos_simple.conf -outputdir <outdir> -outputfile foo_circos_cnvkit_manta.png
+```
+
+``` r
+plot_circos2(outdir = outdir, name = "foo")
+```
+
+  - Result:
+
+<!-- end list -->
+
+``` r
+knitr::include_graphics("man/figures/perl_circos/foo_circos_cnvkit_manta.png")
+```
+
+<img src="man/figures/perl_circos/foo_circos_cnvkit_manta.png" width="100%" />
+
+### OmicCircos
 
   - We can generate circos plots using the functionality available in
     the
@@ -100,7 +149,7 @@ cn_titan$cnv$tot_cn <- cn_titan$cnv$tot_cn - 1
           - Insertions: Purple
           - Inversions: Orange
 
-### Manta with CNVkit
+#### Manta with CNVkit
 
 ``` r
 plot_circos(sv = sv_manta, cnv = cn_cnvkit)
@@ -113,7 +162,7 @@ plot_circos(sv = sv_manta, cnv = cn_cnvkit)
 
 <img src="man/figures/README-circos-plot-manta-cnvkit-1.png" width="100%" />
 
-### Manta with PURPLE
+#### Manta with PURPLE
 
 ``` r
 plot_circos(sv = sv_manta, cnv = cn_purple)
@@ -125,3 +174,31 @@ plot_circos(sv = sv_manta, cnv = cn_purple)
 ```
 
 <img src="man/figures/README-circos-plot-manta-purple-1.png" width="100%" />
+
+## View CNV segments in IGV
+
+``` r
+cn_fname <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
+cnv <- read_cnv(cn_fname)
+cnv2igv(cnv, out_file = "~/Desktop/tmp/cnv_segs4igv.bedgraph", track_name = "cnv_segs2")
+```
+
+``` r
+knitr::include_graphics("man/figures/README-cnv2igv_output.png")
+```
+
+<img src="man/figures/README-cnv2igv_output.png" width="100%" />
+
+## View BED values in IGV
+
+``` r
+bed <- system.file("extdata", "HCC2218_baf.tsv", package = "pebbles")
+bedval2igv(bed, out_file = "~/Desktop/tmp/baf1.igv", track_name = "baf", col = "purple")
+```
+
+``` r
+# example for COLO829 whole-genome BAFs
+knitr::include_graphics("man/figures/README-bedval2igv_output.png")
+```
+
+<img src="man/figures/README-bedval2igv_output.png" width="100%" />

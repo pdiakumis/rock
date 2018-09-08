@@ -1,5 +1,5 @@
 Package: rock
-Version: 0.0.0.1
+Version: 0.0.0.2
 Title: Rocking R at UMCCR
 Description: Contains functions for bioinformatic analyses.
 Authors@R: person("Peter", "Diakumis", email = "peterdiakumis@gmail.com", role = c("aut", "cre"))
@@ -14,7 +14,10 @@ Depends:
     R (>= 2.10)
 Imports: 
     dplyr,
+    GenomicRanges,
+    ggplot2,
     glue,
+    gtools,
     OmicCircos,
     pebbles,
     purrr,
@@ -24,7 +27,7 @@ Imports:
     tidyr,
     vcfR
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Suggests: 
     covr,
     knitr,

@@ -22,7 +22,7 @@ A dataframe (\code{tibble}) with the following fields from the VCF:
 }
 }
 \description{
-Prepares a Manta VCF for display in a circos plot.
+Prepares a Manta VCF for display in an OmicCircos plot.
 }
 \details{
 This function uses vcfR (https://github.com/knausb/vcfR) or

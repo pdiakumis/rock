@@ -1,12 +1,12 @@
 #' Generate Circos Plot
 #'
-#' Generates a circos plot containing structural and copy number variants.
+#' Generates an OmicCircos circos plot containing structural and copy number variants.
 #'
 #' See the example for how to generate `sv` and `cnv` objects.
 #'
 #' @param sv An `sv` object
 #' @param cnv A `cnv` object
-#' @return A circos plot with copy number variant segments
+#' @return An OmicCircos circos plot with copy number variant segments
 #'   and structural variant links.
 #'
 #' @examples
@@ -120,4 +120,78 @@ plot_circos <- function(sv = NULL, cnv = NULL) {
     }
   }
 
+}
+
+#' Generate Perl Circos Plot Files
+#'
+#' Generates required files for a Perl circos plot containing
+#' Manta structural variants and CNVkit/FACETS/PURPLE/TitanCNA copy number variants.
+#'
+#' @param outdir Directory to write the files to.
+#' @param manta Path to Manta VCF file.
+#' @param cnv Path to copy number call file.
+#' @return Generates the required files for a Perl circos plot with copy number
+#'   variant segments and structural variant links.
+#'
+#' @examples
+#' \dontrun{
+#' manta <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
+#' cnv <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
+#' outdir <- "circos"
+#'
+#' circos_prep(outdir, manta, cnv)
+#' }
+#' @export
+circos_prep <- function(outdir = "circos", manta = NULL, cnv = NULL) {
+
+  stopifnot(!is.null(manta), !is.null(cnv))
+  stopifnot(all(file.exists(manta, cnv)))
+  dir.create(outdir, recursive = TRUE)
+
+
+  message(glue::glue("Exporting Manta and CNV circos files to '{outdir}'."))
+  # prepare Manta/CNVkit circos files
+  manta <- prep_manta_vcf2(manta)
+  cnv <- prep_cnv_circos(cnv)
+
+  readr::write_tsv(manta, file.path(outdir, "SAMPLE.link.circos"), col_names = FALSE)
+  readr::write_tsv(cnv, file.path(outdir, "SAMPLE.cnv.circos"), col_names = FALSE)
+
+
+  message(glue::glue("Copying circos templates to '{outdir}'."))
+  file.copy(system.file("templates/circos", "circos_simple.conf", package = "pebbles"), outdir, overwrite = TRUE)
+  file.copy(system.file("templates/circos", "gaps.txt", package = "pebbles"), outdir, overwrite = TRUE)
+  file.copy(system.file("templates/circos", "ideogram.conf", package = "pebbles"), outdir, overwrite = TRUE)
+
+
+}
+
+#' Generate Perl Circos Plot
+#'
+#' Generates a Perl circos plot containing
+#' Manta structural variants and CNV calls.
+#'
+#' @param outdir Directory where the files are located, and where the plot will
+#'   will be written to.
+#' @param name Prefix of plot file (suffix: `_circos_cnvkit_manta.png`).
+#' @return Generates a Perl circos plot in the outdir.
+#'
+#' @examples
+#' \dontrun{
+#' manta <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
+#' cnv <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
+#' outdir <- "circos"
+#'
+#' circos_prep(outdir, manta, cnvkit)
+#' plot_circos2(outdir, name = "foo")
+#' }
+#' @export
+plot_circos2 <- function(outdir = "circos", name = "x") {
+
+  if (Sys.which("circos") != "") {
+    cmd <- glue::glue("circos -nosvg -conf {outdir}/circos_simple.conf -outputdir {outdir} -outputfile {name}_circos_cnvkit_manta.png")
+    system(cmd)
+  } else {
+    stop("Can't find 'circos' in your PATH. Exiting.")
+  }
 }

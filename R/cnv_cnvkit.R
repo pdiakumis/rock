@@ -28,3 +28,4 @@ prep_cnvkit_seg <- function(cnvkit) {
   structure(list(cnv = cnv), class = "cnv")
 
 }
+
