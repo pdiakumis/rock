@@ -17,12 +17,12 @@ Generates a Perl circos plot in the outdir.
 }
 \description{
 Generates a Perl circos plot containing
-Manta structural variants and CNVkit copy number variants.
+Manta structural variants and CNV calls.
 }
 \examples{
 \dontrun{
 manta <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
-cnvkit <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
+cnv <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
 outdir <- "circos"
 
 circos_prep(outdir, manta, cnvkit)

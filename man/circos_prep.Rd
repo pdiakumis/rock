@@ -4,14 +4,14 @@
 \alias{circos_prep}
 \title{Generate Perl Circos Plot Files}
 \usage{
-circos_prep(outdir = "circos", manta = NULL, cnvkit = NULL)
+circos_prep(outdir = "circos", manta = NULL, cnv = NULL)
 }
 \arguments{
 \item{outdir}{Directory to write the files to.}
 
 \item{manta}{Path to Manta VCF file.}
 
-\item{cnvkit}{Path to CNVkit \code{cnvkit-call.cns} file.}
+\item{cnv}{Path to copy number call file.}
 }
 \value{
 Generates the required files for a Perl circos plot with copy number
@@ -19,14 +19,14 @@ variant segments and structural variant links.
 }
 \description{
 Generates required files for a Perl circos plot containing
-Manta structural variants and CNVkit copy number variants.
+Manta structural variants and CNVkit/FACETS/PURPLE/TitanCNA copy number variants.
 }
 \examples{
 \dontrun{
 manta <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
-cnvkit <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
+cnv <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
 outdir <- "circos"
 
-circos_prep(outdir, manta, cnvkit)
+circos_prep(outdir, manta, cnv)
 }
 }
