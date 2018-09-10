@@ -182,10 +182,6 @@ prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
 prep_manta_vcf2 <- function(vcf, ...) {
   sv <- prep_manta_vcf(vcf, ...)$sv
 
-  min_chrom <- function(chr1, chr2) {
-    gtools::mixedsort(c(chr1, chr2))[1]
-  }
-
   min_chrom_v <- Vectorize(min_chrom)
 
   chr_cols <- c(hs1 = '(153,102,0)', hs2 = '(102,102,0)', hs3 = '(153,153,30)',
@@ -200,9 +196,9 @@ prep_manta_vcf2 <- function(vcf, ...) {
   stopifnot(length(chr_cols) == 24)
 
   links_coloured <- sv %>%
+    dplyr::mutate(min_chrom = paste0("hs", min_chrom_v(.data$chrom1, .data$chrom2))) %>%
     dplyr::mutate(chrom1 = paste0("hs", .data$chrom1),
                   chrom2 = paste0("hs", .data$chrom2)) %>%
-    dplyr::mutate(min_chrom = min_chrom_v(.data$chrom1, .data$chrom2)) %>%
     dplyr::mutate(col = dplyr::case_when(
       svtype == "DEL" ~ '(255,0,0)',
       svtype == "DUP" ~ '(0,255,0)',
