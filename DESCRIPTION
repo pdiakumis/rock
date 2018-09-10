@@ -16,7 +16,6 @@ Imports:
     dplyr,
     GenomicRanges,
     glue,
-    gtools,
     OmicCircos,
     pebbles,
     purrr,
