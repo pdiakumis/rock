@@ -8,7 +8,7 @@ plot_circos2(outdir = "circos", name = "x")
 }
 \arguments{
 \item{outdir}{Directory where the files are located, and where the plot will
-will be written to.}
+be written to.}
 
 \item{name}{Prefix of plot file (suffix: \code{_circos_cnvkit_manta.png}).}
 }

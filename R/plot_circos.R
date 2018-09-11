@@ -172,7 +172,7 @@ circos_prep <- function(outdir = "circos", manta = NULL, cnv = NULL) {
 #' Manta structural variants and CNV calls.
 #'
 #' @param outdir Directory where the files are located, and where the plot will
-#'   will be written to.
+#'   be written to.
 #' @param name Prefix of plot file (suffix: `_circos_cnvkit_manta.png`).
 #' @return Generates a Perl circos plot in the outdir.
 #'
@@ -190,6 +190,52 @@ plot_circos2 <- function(outdir = "circos", name = "x") {
 
   if (Sys.which("circos") != "") {
     cmd <- glue::glue("circos -nosvg -conf {outdir}/circos_simple.conf -outputdir {outdir} -outputfile {name}_circos_cnvkit_manta.png")
+    system(cmd)
+  } else {
+    stop("Can't find 'circos' in your PATH. Exiting.")
+  }
+}
+
+
+#' Generate Perl Circos PURPLE BAF Plot
+#'
+#' Generates a Perl circos plot containing
+#' structural variant links, CNV calls, and BAF values from PURPLE.
+#'
+#' @param purple_dir Directory where the circos files are located ('purple/circos').
+#' @param tumor_name Tumor sample name.
+#' @param out_dir Directory where the new circos plot will be written,
+#'   along with the input/config files.
+#' @return Generates a Perl circos plot in the outdir.
+#'
+#' @examples
+#' \dontrun{
+#' purple_dir <- '/path/to/purple/circos'
+#' out_dir <- '~/Desktop/tmp/circos_new'
+#' tumor_name <- 'sampleA_tumor'
+#'
+#' plot_circos_baf(purple_dir, out_dir, tumor_name)
+#' }
+#' @export
+plot_circos_baf <- function(purple_dir = NULL, out_dir = "circos_baf", tumor_name = NULL) {
+
+  stopifnot(!is.null(purple_dir), !is.null(tumor_name))
+  stopifnot(dir.exists(purple_dir))
+
+  req_files <- file.path(purple_dir, paste0(tumor_name, c(".baf.circos", ".cnv.circos", ".map.circos", ".link.circos")))
+  stopifnot(all(file.exists(req_files)))
+  target_files <- file.path(out_dir, sub(tumor_name, "SAMPLE", basename(req_files)))
+
+  dir.create(out_dir, recursive = TRUE)
+  message(glue::glue("Copying circos templates to '{out_dir}'."))
+  file.copy(system.file("templates/circos", "circos_baf.conf", package = "pebbles"), out_dir, overwrite = TRUE)
+  file.copy(system.file("templates/circos", "gaps.txt", package = "pebbles"), out_dir, overwrite = TRUE)
+  file.copy(system.file("templates/circos", "ideogram.conf", package = "pebbles"), out_dir, overwrite = TRUE)
+
+  message(glue::glue("Copying circos input files to '{out_dir}'."))
+  file.copy(from = req_files, to = target_files)
+  if (Sys.which("circos") != "") {
+    cmd <- glue::glue("circos -nosvg -conf {out_dir}/circos_baf.conf -outputdir {out_dir} -outputfile {tumor_name}_circos_baf.png")
     system(cmd)
   } else {
     stop("Can't find 'circos' in your PATH. Exiting.")
