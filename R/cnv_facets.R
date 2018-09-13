@@ -19,7 +19,7 @@ prep_facets_seg <- function(facets) {
 
   stopifnot(file.exists(facets))
 
-  cnv <- readr::read_tsv(facets, col_types = "cddddddddddddd") %>%
+  cnv <- readr::read_tsv(facets, col_types = "cddddddddiiddd") %>%
     dplyr::select(.data$chrom, .data$start, .data$end, .data$tcn.em) %>%
     dplyr::rename(tot_cn = .data$tcn.em) %>%
     dplyr::filter(.data$chrom != "MT") %>%
