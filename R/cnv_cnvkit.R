@@ -41,7 +41,7 @@ prep_cnvkit_seg <- function(cnvkit) {
 #' @param track_name Name of track to appear in IGV (default: "val").
 #' @param col Colour name for the bars (default: lightblue).
 #'
-#' @return The track header invisibly.
+#' @return Invisible list with the modified cnr file and the track header.
 #'
 #' @examples
 #' \dontrun{
@@ -75,4 +75,5 @@ cnvkit_depth2igv <- function(cnr, out_file = NULL, track_name = "val", col = "li
       readr::write_tsv(path = out_file, append = TRUE)
   }
 
+  invisible(list(header = track_head, depth = x))
 }
