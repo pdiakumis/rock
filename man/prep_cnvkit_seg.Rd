@@ -7,7 +7,7 @@
 prep_cnvkit_seg(cnvkit)
 }
 \arguments{
-\item{cnvkit}{Path to CNVkit \code{sample-call.cns} file.}
+\item{cnvkit}{Path to CNVkit \code{cnvkit-call.cns} file.}
 }
 \value{
 A dataframe (\code{tibble}) with the following columns:
@@ -19,7 +19,7 @@ A dataframe (\code{tibble}) with the following columns:
 }
 }
 \description{
-Reads the \code{sample-call.cns} file output by CNVkit and exports the
+Reads the \code{cnvkit-call.cns} file output by CNVkit and exports the
 CNV segment coordinates.
 }
 \examples{
