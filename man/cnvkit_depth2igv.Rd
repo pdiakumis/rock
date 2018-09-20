@@ -18,7 +18,7 @@ cnvkit_depth2igv(cnr, out_file = NULL, track_name = "val",
 \item{col}{Colour name for the bars (default: lightblue).}
 }
 \value{
-The track header invisibly.
+Invisible list with the modified cnr file and the track header.
 }
 \description{
 Reads the \code{cnvkit.cnr} file output by CNVkit and outputs its
