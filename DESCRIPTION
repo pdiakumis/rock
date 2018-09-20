@@ -1,5 +1,5 @@
 Package: rock
-Version: 0.0.0.2
+Version: 0.0.1
 Title: Rocking R at UMCCR
 Description: Contains functions for bioinformatic analyses.
 Authors@R: person("Peter", "Diakumis", email = "peterdiakumis@gmail.com", role = c("aut", "cre"))
