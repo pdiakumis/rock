@@ -35,6 +35,8 @@ You can do the following:
 <!-- vim-markdown-toc GFM -->
 
 * [Installation](#installation)
+    * [devtools](#devtools)
+    * [conda](#conda)
 * [Circos Plots](#circos-plots)
     * [Perl Circos](#perl-circos)
     * [OmicCircos](#omiccircos)
@@ -48,6 +50,8 @@ You can do the following:
 
 ## Installation
 
+### devtools
+
 You can install the development version of `rock` from
 [GitHub](https://github.com/umccr/rock) with:
 
@@ -58,13 +62,23 @@ devtools::install_github("umccr/rock@v1.2.3") # release v1.2.3
 devtools::install_github("umccr/rock@abcd") # commit abcd
 ```
 
-There is no CRAN or conda version (yet).
-
-Then just load with:
-
 ``` r
-require(rock)
+require(rock, lib.loc = "~/rock/master")
 ```
+
+### conda
+
+There is a conda package version at
+<https://anaconda.org/pdiakumis/r-rock> which is updated regularly.
+
+You need to create a conda environment, and then install with something
+like:
+
+``` bash
+conda install -c pdiakumis r-rock
+```
+
+Note that this conda version can be used only with R v3.4.
 
 ## Circos Plots
 
@@ -84,10 +98,10 @@ require(rock)
 manta <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
 cnvkit <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
 outdir <- "man/figures/perl_circos"
-circos_prep(outdir = outdir, manta = manta, cnvkit = cnvkit)
+circos_prep(outdir = outdir, manta = manta, cnv = cnvkit)
 #> Warning in dir.create(outdir, recursive = TRUE): 'man/figures/perl_circos'
 #> already exists
-#> Exporting Manta and CNVkit circos files to 'man/figures/perl_circos'.
+#> Exporting Manta and CNV circos files to 'man/figures/perl_circos'.
 #> Copying circos templates to 'man/figures/perl_circos'.
 #> [1] TRUE
 ```
