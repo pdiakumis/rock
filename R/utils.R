@@ -27,3 +27,18 @@ min_chrom <- function(chr1, chr2) {
     stop(glue::glue("Something went wrong! chr1 is {chr1}; chr2 is {chr2};"))
   }
 }
+
+guess_file_type <- function(file) {
+  dplyr::case_when(
+    grepl("fastq.gz$", file) ~ "FASTQ",
+    grepl("fastq$", file) ~ "FASTQ",
+    grepl("fq$", file) ~ "FASTQ",
+    grepl("fq.gz$", file) ~ "FASTQ",
+    grepl("bam$", file) ~ "BAM",
+    grepl("sam$", file) ~ "SAM",
+    grepl("vcf$", file) ~ "VCF",
+    grepl("vcf.gz$", file) ~ "VCF",
+    grepl("txt$", file) ~ "TXT",
+    grepl("csv$", file) ~ "CSV",
+    TRUE ~ "Other")
+}
