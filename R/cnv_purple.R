@@ -19,9 +19,10 @@ prep_purple_seg <- function(purple) {
 
   stopifnot(file.exists(purple))
 
-  cnv <- readr::read_tsv(purple, col_types = "ciididdccc") %>%
+  cnv <- readr::read_tsv(purple) %>%
     dplyr::rename(chrom = .data$`#chromosome`,
                   tot_cn = .data$copyNumber) %>%
+    dplyr::mutate(chrom = as.character(.data$chrom)) %>%
     dplyr::select(.data$chrom, .data$start, .data$end, .data$tot_cn) %>%
     dplyr::filter(.data$chrom != "MT")
 
