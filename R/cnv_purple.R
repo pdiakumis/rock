@@ -11,19 +11,20 @@
 #'   * tot_cn: total copy number estimate
 #'
 #' @examples
-#' cn <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
-#' prep_purple_seg(cn)
+#' purple <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
+#' prep_purple_seg(purple)
 #'
 #' @export
 prep_purple_seg <- function(purple) {
 
   stopifnot(file.exists(purple))
 
-  cnv <- readr::read_tsv(purple) %>%
+  cnv <- readr::read_tsv(purple,
+                         col_types = readr::cols_only(
+                           `#chromosome` = "c", start = "i", end = "i",
+                           copyNumber = "d")) %>%
     dplyr::rename(chrom = .data$`#chromosome`,
                   tot_cn = .data$copyNumber) %>%
-    dplyr::mutate(chrom = as.character(.data$chrom)) %>%
-    dplyr::select(.data$chrom, .data$start, .data$end, .data$tot_cn) %>%
     dplyr::filter(.data$chrom != "MT")
 
   structure(list(cnv = cnv), class = "cnv")

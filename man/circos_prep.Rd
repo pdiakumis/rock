@@ -15,7 +15,8 @@ circos_prep(outdir = "circos", manta = NULL, cnv = NULL)
 }
 \value{
 Generates the required files for a Perl circos plot with copy number
-variant segments and structural variant links.
+variant segments and structural variant links. Returns these files
+invisibly.
 }
 \description{
 Generates required files for a Perl circos plot containing
@@ -25,8 +26,8 @@ Manta structural variants and CNVkit/FACETS/PURPLE/TitanCNA copy number variants
 \dontrun{
 manta <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
 cnv <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
-outdir <- "circos"
+outdir <- "~/Desktop/tmp/circos"
 
-circos_prep(outdir, manta, cnv)
+circos_prep(outdir = outdir, manta = manta, cnv = cnv)
 }
 }

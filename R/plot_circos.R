@@ -131,15 +131,16 @@ plot_circos <- function(sv = NULL, cnv = NULL) {
 #' @param manta Path to Manta VCF file.
 #' @param cnv Path to copy number call file.
 #' @return Generates the required files for a Perl circos plot with copy number
-#'   variant segments and structural variant links.
+#'   variant segments and structural variant links. Returns these files
+#'   invisibly.
 #'
 #' @examples
 #' \dontrun{
 #' manta <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
 #' cnv <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
-#' outdir <- "circos"
+#' outdir <- "~/Desktop/tmp/circos"
 #'
-#' circos_prep(outdir, manta, cnv)
+#' circos_prep(outdir = outdir, manta = manta, cnv = cnv)
 #' }
 #' @export
 circos_prep <- function(outdir = "circos", manta = NULL, cnv = NULL) {
@@ -162,6 +163,8 @@ circos_prep <- function(outdir = "circos", manta = NULL, cnv = NULL) {
   file.copy(system.file("templates/circos", "circos_simple.conf", package = "pebbles"), outdir, overwrite = TRUE)
   file.copy(system.file("templates/circos", "gaps.txt", package = "pebbles"), outdir, overwrite = TRUE)
   file.copy(system.file("templates/circos", "ideogram.conf", package = "pebbles"), outdir, overwrite = TRUE)
+
+  invisible(list(sv = manta, cnv = cnv))
 
 
 }

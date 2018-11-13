@@ -23,7 +23,7 @@ Reads the \code{sample-purple.cnv} file output by PURPLE and exports the
 CNV segment coordinates.
 }
 \examples{
-cn <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
-prep_purple_seg(cn)
+purple <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
+prep_purple_seg(purple)
 
 }
