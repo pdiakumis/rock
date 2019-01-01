@@ -80,7 +80,7 @@ read_manta_vcf <- function(vcf) {
 
 #' Prepare Manta VCF for Circos
 #'
-#' Prepares a Manta VCF for display in an OmicCircos plot.
+#' Prepares a Manta VCF for display in a Circos plot.
 #'
 #' This function uses vcfR (https://github.com/knausb/vcfR) or
 #' bcftools (https://samtools.github.io/bcftools/bcftools.html) to read in the VCF file.
@@ -119,7 +119,8 @@ prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
     dplyr::rename(chrom2 = .data$chrom11) %>%
     dplyr::mutate(bndid = substring(.data$id, nchar(.data$id))) %>%
     dplyr::filter(.data$bndid == "1") %>%
-    dplyr::select(.data$chrom1, .data$pos1, .data$chrom2, .data$pos2, .data$id, .data$mateid, .data$svtype, .data$filter)
+    dplyr::select(.data$chrom1, .data$pos1, .data$chrom2,
+                  .data$pos2, .data$id, .data$mateid, .data$svtype, .data$filter)
 
   stopifnot(.manta_proper_pairs(df_bnd$id, df_bnd$mateid))
 
@@ -127,7 +128,8 @@ prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
   df_other <- DF %>%
     dplyr::filter(.data$svtype != "BND") %>%
     dplyr::mutate(chrom2 = .data$chrom1) %>%
-    dplyr::select(.data$chrom1, .data$pos1, .data$chrom2, .data$pos2, .data$id, .data$mateid, .data$svtype, .data$filter)
+    dplyr::select(.data$chrom1, .data$pos1, .data$chrom2, .data$pos2,
+                  .data$id, .data$mateid, .data$svtype, .data$filter)
 
   # All together now
   sv <- df_other %>%
@@ -139,7 +141,8 @@ prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
   }
 
   sv <- sv %>%
-    dplyr::select(.data$chrom1, .data$pos1, .data$chrom2, .data$pos2, .data$svtype)
+    dplyr::select(.data$chrom1, .data$pos1,
+                  .data$chrom2, .data$pos2, .data$svtype)
 
   structure(list(sv = sv), class = "sv")
 }
