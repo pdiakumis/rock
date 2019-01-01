@@ -11,14 +11,11 @@ bioinformatics life at UMCCR (UniMelb Centre for Cancer Research).
 
 You can do the following:
 
-  - Create circos plots using structural variant calls from
-    [Manta](https://github.com/Illumina/manta), and copy number variant
-    calls from [CNVkit](https://github.com/etal/cnvkit),
-    [FACETS](https://github.com/mskcc/facets),
-    [TitanCNA](https://github.com/gavinha/TitanCNA) or
+  - Create [Perl circos](http://circos.ca/) plots using structural
+    variant calls from [Manta](https://github.com/Illumina/manta), and
+    copy number variant calls from
+    [CNVkit](https://github.com/etal/cnvkit) or
     [PURPLE](https://github.com/hartwigmedical/hmftools/tree/master/purity-ploidy-estimator).
-    The OmicCircos R package is used. You can also use the Perl circos
-    tool for Manta with CNVkit.
 
   - Create CNV profiles in horizontal facets for multiple samples or
     callers (piano plots). Can also zoom into specific chromosomes, and
@@ -38,10 +35,6 @@ You can do the following:
     * [devtools](#devtools)
     * [conda](#conda)
 * [Circos Plots](#circos-plots)
-    * [Perl Circos](#perl-circos)
-    * [OmicCircos](#omiccircos)
-        * [Manta with CNVkit](#manta-with-cnvkit)
-        * [Manta with PURPLE](#manta-with-purple)
 * [Piano Plots](#piano-plots)
 * [View CNV segments in IGV](#view-cnv-segments-in-igv)
 * [View BED values in IGV](#view-bed-values-in-igv)
@@ -63,7 +56,7 @@ devtools::install_github("umccr/rock@abcd") # commit abcd
 ```
 
 ``` r
-require(rock, lib.loc = "~/rock/master")
+require(rock)
 ```
 
 ### conda
@@ -81,8 +74,6 @@ conda install -c pdiakumis r-rock
 Note that this conda version can be used only with R v3.4.
 
 ## Circos Plots
-
-### Perl Circos
 
   - We can generate circos plots using the original
     [circos](http://circos.ca/) software package, written in Perl.
@@ -103,7 +94,6 @@ circos_prep(outdir = outdir, manta = manta, cnv = cnvkit)
 #> already exists
 #> Exporting Manta and CNV circos files to 'man/figures/perl_circos'.
 #> Copying circos templates to 'man/figures/perl_circos'.
-#> [1] TRUE
 ```
 
   - Then execute the following `circos` command either on the command
@@ -130,12 +120,10 @@ knitr::include_graphics("man/figures/perl_circos/foo_circos_cnvkit_manta.png")
 
 <img src="man/figures/perl_circos/foo_circos_cnvkit_manta.png" width="100%" />
 
-### OmicCircos
+## Piano Plots
 
-  - We can generate circos plots using the functionality available in
-    the
-    [OmicCircos](https://bioconductor.org/packages/release/bioc/html/OmicCircos.html)
-    Bioconductor R package.
+  - We can generate ‘piano’ plots to compare CNV calls from multiple
+    callers or samples.
 
   - Start by preparing the SV and CNV
 calls.
@@ -149,7 +137,6 @@ facets <- system.file("extdata", "HCC2218_facets_cncf.tsv", package = "pebbles")
 titan <- system.file("extdata", "HCC2218_titan.segs.tsv", package = "pebbles")
 purple <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
 truth <- system.file("extdata", "HCC2218_truthset_cnv_bcbio.tsv", package = "pebbles")
-
 sv_manta <- prep_manta_vcf(manta)
 cn_facets <- prep_facets_seg(facets)
 cn_cnvkit <- prep_cnvkit_seg(cnvkit)
@@ -158,57 +145,6 @@ cn_truth <- prep_truth_seg(truth)
 cn_titan <- prep_titan_seg(titan) # titan needs -1 for this case
 cn_titan$cnv$tot_cn <- cn_titan$cnv$tot_cn - 1
 ```
-
-  - Now we can generate a circos plot with Manta links and
-    FACETS/CNVkit/TitanCNA/PURPLE segments (note that the `Warning`
-    message below is due to a hack used in the OmicCircos code, where a
-    matrix with numbers and characters is coerced to numeric. Just don’t
-    worry about it..):
-
-  - For the internal lines:
-    
-      - The \_inter\_chromosomal links take the chromosome colour of
-        mate1 of each breakend pair.
-      - The \_intra\_chromosomal lines are coloured according to the
-        variant type:
-          - Deletions: Red
-          - Duplications: Green
-          - Insertions: Purple
-          - Inversions: Orange
-
-#### Manta with CNVkit
-
-``` r
-plot_circos(sv = sv_manta, cnv = cn_cnvkit)
-#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
-#> = "arc", : NAs introduced by coercion
-
-#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
-#> = "arc", : NAs introduced by coercion
-```
-
-<img src="man/figures/README-circos-plot-manta-cnvkit-1.png" width="100%" />
-
-#### Manta with PURPLE
-
-``` r
-plot_circos(sv = sv_manta, cnv = cn_purple)
-#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
-#> = "arc", : NAs introduced by coercion
-
-#> Warning in OmicCircos::circos(R = 260, cir = pebbles::circos_data$db, type
-#> = "arc", : NAs introduced by coercion
-```
-
-<img src="man/figures/README-circos-plot-manta-purple-1.png" width="100%" />
-
-## Piano Plots
-
-  - We can generate ‘piano’ plots to compare CNV calls from multiple
-    callers or
-samples.
-
-<!-- end list -->
 
 ``` r
 cnv_list <- list(truth = cn_truth, cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan)
