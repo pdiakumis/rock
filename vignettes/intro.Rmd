@@ -22,73 +22,43 @@ require(rock)
 
 
 
-## Circos Plots
-
-* We can generate circos plots using the functionality available in the
-  [OmicCircos](https://bioconductor.org/packages/release/bioc/html/OmicCircos.html)
-  Bioconductor R package.
-
-* Start by preparing the SV and CNV calls.
-
-```{r circos-prep, message=FALSE}
-manta <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
-cnvkit <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
-facets <- system.file("extdata", "HCC2218_facets_cncf.tsv", package = "pebbles")
-titan <- system.file("extdata", "HCC2218_titan.segs.tsv", package = "pebbles")
-purple <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
-
-sv_manta <- prep_manta_vcf(manta)
-cn_facets <- prep_facets_seg(facets)
-cn_cnvkit <- prep_cnvkit_seg(cnvkit)
-cn_titan <- prep_titan_seg(titan)
-cn_purple <- prep_purple_seg(purple)
-```
-
-* Now we can generate a circos plot with Manta links and FACETS/CNVkit/TitanCNA/PURPLE segments
-  (note that the `Warning` message below is due to a hack used in the OmicCircos
-  code, where a matrix with numbers and characters is coerced to numeric.
-  Just don't worry about it..):
-
-* For the internal lines:
-    - The _inter_chromosomal links take the chromosome colour of mate1 of each breakend pair.
-    - The _intra_chromosomal lines are coloured according to the variant type:
-        - Deletions: Red
-        - Duplications: Green
-        - Insertions: Purple
-        - Inversions: Orange
-
-
-### Manta with CNVkit
-
-```{r circos-plot-manta-cnvkit, fig.width=8, fig.height=8}
-plot_circos(sv = sv_manta, cnv = cn_cnvkit)
-```
-
-### Manta with FACETS
-
-```{r circos-plot-manta-facets, fig.width=8, fig.height=8}
-plot_circos(sv = sv_manta, cnv = cn_facets)
-```
-
-### Manta with TitanCNA
-
-```{r circos-plot-manta-titan, fig.width=8, fig.height=8}
-plot_circos(sv = sv_manta, cnv = cn_titan)
-```
-
-### Manta with PURPLE
-
-```{r circos-plot-manta-purple, fig.width=8, fig.height=8}
-plot_circos(sv = sv_manta, cnv = cn_purple)
-```
-
 ## Piano Plots
 
 * We can generate 'piano' plots to compare CNV calls from multiple
   callers or samples.
   
-```{r piano-plot-cnvkit-facets-purple-titan1, fig.width=8, fig.height=7}
-plot_piano(list(cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan))
+* Start by preparing the SV and CNV calls.
+
+```{r omiccircos-prep, message=FALSE}
+manta <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
+cnvkit <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
+facets <- system.file("extdata", "HCC2218_facets_cncf.tsv", package = "pebbles")
+titan <- system.file("extdata", "HCC2218_titan.segs.tsv", package = "pebbles")
+purple <- system.file("extdata", "HCC2218_purple.cnv.tsv", package = "pebbles")
+truth <- system.file("extdata", "HCC2218_truthset_cnv_bcbio.tsv", package = "pebbles")
+sv_manta <- prep_manta_vcf(manta)
+cn_facets <- prep_facets_seg(facets)
+cn_cnvkit <- prep_cnvkit_seg(cnvkit)
+cn_purple <- prep_purple_seg(purple)
+cn_truth <- prep_truth_seg(truth)
+cn_titan <- prep_titan_seg(titan) # titan needs -1 for this case
+cn_titan$cnv$tot_cn <- cn_titan$cnv$tot_cn - 1
 ```
   
+```{r piano-plot-cnvkit-facets-purple-titan1, fig.width=10, fig.height=7}
+cnv_list <- list(cnvkit = cn_cnvkit, facets = cn_facets, purple = cn_purple, titan = cn_titan)
+plot_piano(cnv_list = cnv_list)
+```
   
+* You can also zoom into specific chromosomes:
+
+```{r piano-plot-chrom, fig.width=10, fig.height=7}
+plot_piano(cnv_list = cnv_list, chromosomes = c("1", "7", "8"), hide_x_lab = FALSE)
+```
+
+* Change colours of the CNV segments:
+
+```{r piano-plot-chrom-colours, fig.width=10, fig.height=7}
+plot_piano(cnv_list = cnv_list, chromosomes = c("1", "7", "8"),
+           seg.col = c("orange", "lightblue", "blue", "pink"), hide_x_lab = FALSE)
+```
