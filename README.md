@@ -1,11 +1,6 @@
 
 # Rocking R at UMCCR
 
-[![Travis build
-status](https://travis-ci.org/umccr/rock.svg?branch=master)](https://travis-ci.org/umccr/rock)
-[![Coverage
-status](https://codecov.io/gh/umccr/rock/branch/master/graph/badge.svg)](https://codecov.io/github/umccr/rock?branch=master)
-
 `rock` is an R package that (hopefully) helps with the day to day
 bioinformatics life at UMCCR (UniMelb Centre for Cancer Research).
 
@@ -46,13 +41,13 @@ You can do the following:
 ### devtools
 
 You can install the development version of `rock` from
-[GitHub](https://github.com/umccr/rock) with:
+[GitHub](https://github.com/pdiakumis/rock) with:
 
 ``` r
 # install.packages("devtools") # if not pre-installed
-devtools::install_github("umccr/rock") # master version
-devtools::install_github("umccr/rock@v1.2.3") # release v1.2.3
-devtools::install_github("umccr/rock@abcd") # commit abcd
+devtools::install_github("pdiakumis/rock") # master version
+devtools::install_github("pdiakumis/rock@v1.2.3") # release v1.2.3
+devtools::install_github("pdiakumis/rock@abcd") # commit abcd
 ```
 
 ``` r

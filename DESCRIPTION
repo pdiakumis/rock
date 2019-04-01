@@ -3,13 +3,13 @@ Version: 0.0.1
 Title: Rocking R at UMCCR
 Description: Contains functions for bioinformatic analyses.
 Authors@R: person("Peter", "Diakumis", email = "peterdiakumis@gmail.com", role = c("aut", "cre"))
-URL: https://github.com/umccr/rock
-BugReports: https://github.com/umccr/rock/issues
+URL: https://github.com/pdiakumis/rock
+BugReports: https://github.com/pdiakumis/rock/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 ByteCompile: true
-Remotes: github::umccr/pebbles
+Remotes: github::pdiakumis/pebbles
 Depends:
     R (>= 2.10)
 Imports: 
