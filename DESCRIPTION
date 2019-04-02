@@ -12,9 +12,8 @@ ByteCompile: true
 Remotes: github::pdiakumis/pebbles
 Depends:
     R (>= 2.10)
-Imports: 
+Imports:
     dplyr,
-    GenomicRanges,
     ggplot2,
     glue,
     pebbles,
@@ -27,7 +26,7 @@ Imports:
     vcfR
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
-Suggests: 
+Suggests:
     covr,
     knitr,
     rmarkdown,
