@@ -92,7 +92,7 @@ circos_prep(outdir = outdir, manta = manta, cnv = cnvkit)
 ```
 
   - Then execute the following `circos` command either on the command
-    line, or via the `plot_circos2`
+    line, or via the `plot_circos`
 function:
 
 <!-- end list -->
@@ -102,7 +102,7 @@ circos -nosvg -conf <outdir>/circos_simple.conf -outputdir <outdir> -outputfile 
 ```
 
 ``` r
-plot_circos2(outdir = outdir, name = "foo")
+plot_circos(outdir = outdir, name = "foo")
 ```
 
   - Result:

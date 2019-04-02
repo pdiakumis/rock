@@ -83,14 +83,14 @@ circos_prep(outdir = outdir, manta = manta, cnv = cnvkit)
 ```
 
 * Then execute the following `circos` command either on the command line, or via
-  the `plot_circos2` function:
+  the `plot_circos` function:
 
 ```bash
 circos -nosvg -conf <outdir>/circos_simple.conf -outputdir <outdir> -outputfile foo_circos_cnvkit_manta.png
 ```
 
 ```{r perlcircos-plot, eval=FALSE}
-plot_circos2(outdir = outdir, name = "foo")
+plot_circos(outdir = outdir, name = "foo")
 ```
 
 * Result:
