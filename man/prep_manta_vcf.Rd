@@ -25,8 +25,8 @@ A dataframe (\code{tibble}) with the following fields from the VCF:
 Prepares a Manta VCF for display in a Circos plot.
 }
 \details{
-This function uses vcfR (https://github.com/knausb/vcfR) or
-bcftools (https://samtools.github.io/bcftools/bcftools.html) to read in the VCF file.
+This function uses bcftools (https://samtools.github.io/bcftools/bcftools.html)
+or vcfR (https://github.com/knausb/vcfR) to read in the VCF file.
 If you've got a large VCF file, or one with humongous gene annotations,
 vcfR  will probably choke. A much quicker alternative is bcftools, but you need
 to make sure it has been installed and that it can be found in the R session

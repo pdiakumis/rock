@@ -1,14 +1,15 @@
 #' Generate Perl Circos Plot Files
 #'
 #' Generates required files for a Perl circos plot containing
-#' Manta structural variants and CNVkit/FACETS/PURPLE/TitanCNA copy number variants.
+#' Manta structural variants and/or CNVkit/FACETS/PURPLE/TitanCNA
+#' copy number variants.
 #'
 #' @param outdir Directory to write the files to.
 #' @param manta Path to Manta VCF file.
 #' @param cnv Path to copy number call file.
-#' @return Generates the required files for a Perl circos plot with copy number
-#'   variant segments and structural variant links. Returns these files
-#'   invisibly.
+#' @return Generates the required files for a Perl circos plot with structural
+#'   variant links and/or copy number variant segments.
+#'   Returns the paths to these files invisibly.
 #'
 #' @examples
 #' \dontrun{
@@ -17,42 +18,47 @@
 #' outdir <- "~/Desktop/tmp/circos"
 #'
 #' circos_prep(outdir = outdir, manta = manta, cnv = cnv)
+#' circos_prep(outdir = outdir, manta = manta) # no CNVs provided
+#' circos_prep(outdir = outdir, cnv = cnv) # no CNVs provided
 #' }
 #' @export
 circos_prep <- function(outdir = "circos", manta = NULL, cnv = NULL) {
 
-  stopifnot(!is.null(manta), !is.null(cnv))
-  stopifnot(all(file.exists(manta, cnv)))
+  template <- NULL
+  stopifnot((!is.null(manta) && file.exists(manta)) || (!is.null(cnv) && file.exists(cnv)))
   dir.create(outdir, recursive = TRUE)
 
-
-  message(glue::glue("Exporting Manta and CNV circos files to '{outdir}'."))
+  message(glue::glue("Exporting Manta and/or CNV circos files to '{outdir}'."))
   # prepare Manta/CNVkit circos files
-  manta <- prep_manta_vcf2(manta)
-  cnv <- prep_cnv_circos(cnv)
+  # template can be 'cnvsv', 'sv', or 'cnv'
+  if (!is.null(manta)) {
+    template <- "sv"
+    manta <- prep_manta_vcf2(manta)
+    readr::write_tsv(manta, file.path(outdir, "SAMPLE.link.circos"), col_names = FALSE)
+  }
+  if (!is.null(cnv)) {
+    template <- paste0("cnv", template)
+    cnv <- prep_cnv_circos(cnv)
+    readr::write_tsv(cnv, file.path(outdir, "SAMPLE.cnv.circos"), col_names = FALSE)
+  }
 
-  readr::write_tsv(manta, file.path(outdir, "SAMPLE.link.circos"), col_names = FALSE)
-  readr::write_tsv(cnv, file.path(outdir, "SAMPLE.cnv.circos"), col_names = FALSE)
-
-
-  message(glue::glue("Copying circos templates to '{outdir}'."))
-  file.copy(system.file("templates/circos", "circos_simple.conf", package = "pebbles"), outdir, overwrite = TRUE)
+  message(glue::glue("Copying circos templates to '{outdir}'. 'template' is {template}."))
+  file.copy(from = system.file("templates/circos", glue::glue("circos_{template}.conf"), package = "pebbles"),
+            to = file.path(outdir, "circos.conf"), overwrite = TRUE)
   file.copy(system.file("templates/circos", "gaps.txt", package = "pebbles"), outdir, overwrite = TRUE)
   file.copy(system.file("templates/circos", "ideogram.conf", package = "pebbles"), outdir, overwrite = TRUE)
 
   invisible(list(sv = manta, cnv = cnv))
-
-
 }
 
 #' Generate Perl Circos Plot
 #'
 #' Generates a Perl circos plot containing
-#' Manta structural variants and CNV calls.
+#' Manta structural variants and/or CNV calls.
 #'
 #' @param outdir Directory where the files are located, and where the plot will
 #'   be written to.
-#' @param name Prefix of plot file (suffix: `_circos_cnvkit_manta.png`).
+#' @param name Prefix of plot file (suffix: `_circos.png`) (default: `x`).
 #' @return Generates a Perl circos plot in the outdir.
 #'
 #' @examples
@@ -62,13 +68,13 @@ circos_prep <- function(outdir = "circos", manta = NULL, cnv = NULL) {
 #' outdir <- "circos"
 #'
 #' circos_prep(outdir, manta, cnvkit)
-#' plot_circos2(outdir, name = "foo")
+#' plot_circos(outdir, name = "foo")
 #' }
 #' @export
-plot_circos2 <- function(outdir = "circos", name = "x") {
+plot_circos <- function(outdir = "circos", name = "x") {
 
   if (Sys.which("circos") != "") {
-    cmd <- glue::glue("circos -nosvg -conf {outdir}/circos_simple.conf -outputdir {outdir} -outputfile {name}_circos_cnvkit_manta.png")
+    cmd <- glue::glue("circos -nosvg -conf {outdir}/circos.conf -outputdir {outdir} -outputfile {name}_circos.png")
     system(cmd)
   } else {
     stop("Can't find 'circos' in your PATH. Exiting.")

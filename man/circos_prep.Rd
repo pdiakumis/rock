@@ -14,13 +14,14 @@ circos_prep(outdir = "circos", manta = NULL, cnv = NULL)
 \item{cnv}{Path to copy number call file.}
 }
 \value{
-Generates the required files for a Perl circos plot with copy number
-variant segments and structural variant links. Returns these files
-invisibly.
+Generates the required files for a Perl circos plot with structural
+variant links and/or copy number variant segments.
+Returns the paths to these files invisibly.
 }
 \description{
 Generates required files for a Perl circos plot containing
-Manta structural variants and CNVkit/FACETS/PURPLE/TitanCNA copy number variants.
+Manta structural variants and/or CNVkit/FACETS/PURPLE/TitanCNA
+copy number variants.
 }
 \examples{
 \dontrun{
@@ -29,5 +30,7 @@ cnv <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
 outdir <- "~/Desktop/tmp/circos"
 
 circos_prep(outdir = outdir, manta = manta, cnv = cnv)
+circos_prep(outdir = outdir, manta = manta) # no CNVs provided
+circos_prep(outdir = outdir, cnv = cnv) # no CNVs provided
 }
 }

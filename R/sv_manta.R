@@ -1,9 +1,9 @@
 #' Read Manta VCF
 #'
-#' Read main columns of interest from Manta VCF using bcftools
+#' Read main columns of interest from Manta VCF using bcftools or vcfR
 #'
-#' This function uses vcfR (https://github.com/knausb/vcfR) or
-#' bcftools (https://samtools.github.io/bcftools/bcftools.html) to read in the VCF file.
+#' This function uses bcftools (https://samtools.github.io/bcftools/bcftools.html)
+#' or vcfR (https://github.com/knausb/vcfR) to read in the VCF file.
 #' If you've got a large VCF file, or one with humongous gene annotations,
 #' vcfR  will probably choke. A much quicker alternative is bcftools, but you need
 #' to make sure it has been installed and that it can be found in the R session
@@ -12,7 +12,7 @@
 #' or perhaps following the suggestions here: https://stackoverflow.com/questions/31121645.
 #'
 #'
-#' @param vcf Path to Manta VCF file. Can be compressed or not.
+#' @param vcf Path to Manta VCF file. Can be compressed (`.vcf.gz`) or not (`.vcf`).
 #' @return A dataframe (`tibble`) with the following fields from the VCF:
 #'   * chrom1: `CHROM`
 #'   * pos1: `POS` | `INFO/BPI_START`
@@ -24,7 +24,9 @@
 #'
 #' @examples
 #' vcf <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
+#' vcf2 <- system.file("extdata", "manta_no_bpi.vcf", package = "pebbles")
 #' rock:::read_manta_vcf(vcf)
+#' rock:::read_manta_vcf(vcf2)
 #'
 read_manta_vcf <- function(vcf) {
 
@@ -82,8 +84,8 @@ read_manta_vcf <- function(vcf) {
 #'
 #' Prepares a Manta VCF for display in a Circos plot.
 #'
-#' This function uses vcfR (https://github.com/knausb/vcfR) or
-#' bcftools (https://samtools.github.io/bcftools/bcftools.html) to read in the VCF file.
+#' This function uses bcftools (https://samtools.github.io/bcftools/bcftools.html)
+#' or vcfR (https://github.com/knausb/vcfR) to read in the VCF file.
 #' If you've got a large VCF file, or one with humongous gene annotations,
 #' vcfR  will probably choke. A much quicker alternative is bcftools, but you need
 #' to make sure it has been installed and that it can be found in the R session
