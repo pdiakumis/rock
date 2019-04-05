@@ -1,18 +1,12 @@
 #' Read Manta VCF
 #'
-#' Read main columns of interest from Manta VCF using bcftools or vcfR
+#' Read main columns of interest from Manta VCF using bcftools or bedr
 #'
-#' This function uses bcftools (https://samtools.github.io/bcftools/bcftools.html)
-#' or vcfR (https://github.com/knausb/vcfR) to read in the VCF file.
-#' If you've got a large VCF file, or one with humongous gene annotations,
-#' vcfR  will probably choke. A much quicker alternative is bcftools, but you need
-#' to make sure it has been installed and that it can be found in the R session
-#' via the PATH environmental variable. If you're an RStudio user, you can make
-#' sure it recognises the user's PATH by opening the RStudio app via the terminal,
-#' or perhaps following the suggestions here: https://stackoverflow.com/questions/31121645.
+#' Uses bcftools (https://samtools.github.io/bcftools/bcftools.html)
+#' or bedr (https://cran.r-project.org/web/packages/bedr/index.html) to read
+#' in the VCF file.
 #'
-#'
-#' @param vcf Path to Manta VCF file. Can be compressed (`.vcf.gz`) or not (`.vcf`).
+#' @param vcf Path to Manta VCF file (`.vcf.gz` or `.vcf`).
 #' @return A dataframe (`tibble`) with the following fields from the VCF:
 #'   * chrom1: `CHROM`
 #'   * pos1: `POS` | `INFO/BPI_START`
@@ -32,31 +26,29 @@ read_manta_vcf <- function(vcf) {
 
   stopifnot(file.exists(vcf))
 
-  # You have two options: use bcftools or vcfR
-  # - If bcftools exists, use it
-  # - If bcftools doesn't exist, use vcfR
+  # You have two options: use bcftools (first choice) or bedr
   if (Sys.which("bcftools") == "") {
-    # use vcfR
-    vcfr <- vcfR::read.vcfR(vcf, verbose = FALSE)
-    DF <- tibble::tibble(chrom1 = as.character(vcfR::getCHROM(vcfr)),
+    # use bedr
+    vcf <- bedr::read.vcf(vcf, split.info = TRUE)
+    DF <- tibble::tibble(chrom1 = as.character(vcf$vcf$CHROM),
                          pos1 = "dummy1",
                          pos2 = "dummy2",
-                         id = vcfR::getID(vcfr),
-                         mateid = vcfR::extract.info(vcfr, "MATEID"),
-                         svtype = vcfR::extract.info(vcfr, "SVTYPE"),
-                         filter = vcfR::getFILTER(vcfr))
+                         id = vcf$vcf$ID,
+                         mateid = vcf$vcf$MATEID,
+                         svtype = vcf$vcf$SVTYPE,
+                         filter = vcf$vcf$FILTER)
 
-    if (any(grepl("BPI_START", vcfr@meta))) {
+    if (any(grepl("BPI_START", vcf$header$INFO[, "ID"]))) {
       # use BPI fields
       DF <- dplyr::mutate(DF,
-                          pos1 = as.integer(vcfR::extract.info(vcfr, "BPI_START")),
-                          pos2 = as.integer(vcfR::extract.info(vcfr, "BPI_END"))
-      )
+                          pos1 = as.integer(vcf$vcf$BPI_START),
+                          pos2 = as.integer(vcf$vcf$BPI_END))
+
     } else {
       # use typical fields
       DF <- dplyr::mutate(DF,
-                          pos1 = as.integer(vcfR::getPOS(vcfr)),
-                          pos2 = as.integer(vcfR::extract.info(vcfr, "END")))
+                          pos1 = as.integer(vcf$vcf$POS),
+                          pos2 = as.integer(vcf$vcf$END))
     }
 
   } else {
@@ -84,17 +76,9 @@ read_manta_vcf <- function(vcf) {
 #'
 #' Prepares a Manta VCF for display in a Circos plot.
 #'
-#' This function uses bcftools (https://samtools.github.io/bcftools/bcftools.html)
-#' or vcfR (https://github.com/knausb/vcfR) to read in the VCF file.
-#' If you've got a large VCF file, or one with humongous gene annotations,
-#' vcfR  will probably choke. A much quicker alternative is bcftools, but you need
-#' to make sure it has been installed and that it can be found in the R session
-#' via the PATH environmental variable. If you're an RStudio user, you can make
-#' sure it recognises the user's PATH by opening the RStudio app via the terminal,
-#' or perhaps following the suggestions here: https://stackoverflow.com/questions/31121645.
-#'
 #' @param vcf Path to Manta VCF file. Can be compressed or not.
-#' @param filter_pass Keep only variants annotated with a PASS FILTER? (default: FALSE).
+#' @param filter_pass Keep only variants annotated with a PASS FILTER?
+#'   (default: FALSE).
 #' @return A dataframe (`tibble`) with the following fields from the VCF:
 #'   * chrom1: `CHROM`
 #'   * pos1: `POS` | `INFO/BPI_START`
