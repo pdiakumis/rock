@@ -9,7 +9,8 @@ prep_manta_vcf(vcf, filter_pass = FALSE)
 \arguments{
 \item{vcf}{Path to Manta VCF file. Can be compressed or not.}
 
-\item{filter_pass}{Keep only variants annotated with a PASS FILTER? (default: FALSE).}
+\item{filter_pass}{Keep only variants annotated with a PASS FILTER?
+(default: FALSE).}
 }
 \value{
 A dataframe (\code{tibble}) with the following fields from the VCF:
@@ -23,16 +24,6 @@ A dataframe (\code{tibble}) with the following fields from the VCF:
 }
 \description{
 Prepares a Manta VCF for display in a Circos plot.
-}
-\details{
-This function uses bcftools (https://samtools.github.io/bcftools/bcftools.html)
-or vcfR (https://github.com/knausb/vcfR) to read in the VCF file.
-If you've got a large VCF file, or one with humongous gene annotations,
-vcfR  will probably choke. A much quicker alternative is bcftools, but you need
-to make sure it has been installed and that it can be found in the R session
-via the PATH environmental variable. If you're an RStudio user, you can make
-sure it recognises the user's PATH by opening the RStudio app via the terminal,
-or perhaps following the suggestions here: https://stackoverflow.com/questions/31121645.
 }
 \examples{
 vcf <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
