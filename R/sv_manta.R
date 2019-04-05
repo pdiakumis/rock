@@ -24,31 +24,31 @@
 #'
 read_manta_vcf <- function(vcf) {
 
-  stopifnot(file.exists(vcf))
+  stopifnot(file.exists(vcf), length(vcf) == 1)
 
   # You have two options: use bcftools (first choice) or bedr
   if (Sys.which("bcftools") == "") {
     # use bedr
-    vcf <- bedr::read.vcf(vcf, split.info = TRUE)
-    DF <- tibble::tibble(chrom1 = as.character(vcf$vcf$CHROM),
+    x <- bedr::read.vcf(vcf, split.info = TRUE, verbose = FALSE)
+    DF <- tibble::tibble(chrom1 = as.character(x$vcf$CHROM),
                          pos1 = "dummy1",
                          pos2 = "dummy2",
-                         id = vcf$vcf$ID,
-                         mateid = vcf$vcf$MATEID,
-                         svtype = vcf$vcf$SVTYPE,
-                         filter = vcf$vcf$FILTER)
+                         id = x$vcf$ID,
+                         mateid = x$vcf$MATEID,
+                         svtype = x$vcf$SVTYPE,
+                         filter = x$vcf$FILTER)
 
-    if (any(grepl("BPI_START", vcf$header$INFO[, "ID"]))) {
+    if (any(grepl("BPI_START", x$header$INFO[, "ID"]))) {
       # use BPI fields
       DF <- dplyr::mutate(DF,
-                          pos1 = as.integer(vcf$vcf$BPI_START),
-                          pos2 = as.integer(vcf$vcf$BPI_END))
+                          pos1 = as.integer(x$vcf$BPI_START),
+                          pos2 = as.integer(x$vcf$BPI_END))
 
     } else {
       # use typical fields
       DF <- dplyr::mutate(DF,
-                          pos1 = as.integer(vcf$vcf$POS),
-                          pos2 = as.integer(vcf$vcf$END))
+                          pos1 = as.integer(x$vcf$POS),
+                          pos2 = as.integer(x$vcf$END))
     }
 
   } else {
