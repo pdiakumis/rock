@@ -21,16 +21,19 @@ samplot_prep_vcf <- function(vcf_file, bam_file, sample_nm, other = "") {
   prep_manta_vcf(vcf_file)$sv %>%
     dplyr::mutate(
       svlen = ifelse(.data$svtype != "BND", pos2 - pos1, 0),
-      cl = paste0(glue::glue("python samplot.py --sv_type {.data$svtype} {other}"),
-
+      cl = paste0(glue::glue("python samplot.py --sv_type {.data$svtype} ",
+                             "--bams {paste(bam_file, collapse = ' ')} ",
+                             "--titles {paste(sample_nm, collapse = ' ')} ",
+                             "{other}"),
                   dplyr::case_when(
                     .data$svtype == "BND" ~ glue::glue(
-                      "--chrom {.data$chrom1} --start {.data$pos1} --end {.data$pos1} ",
-                      "--chrom {.data$chrom2} --start {.data$pos2} --end {.data$pos2} ",
-                      "--output_file {.data$svtype}_{.data$chrom1}:{.data$pos1}_{.data$chrom2}:{.data$pos2}"),
+                      "-c {.data$chrom1} -s {.data$pos1} -e {.data$pos1} ",
+                      "-c {.data$chrom2} -s {.data$pos2} -e {.data$pos2} ",
+                      "-o {.data$svtype}_{.data$chrom1}:{.data$pos1}_{.data$chrom2}:{.data$pos2}"),
                     .data$svtype != "BND" ~ glue::glue(
-                      "--chrom {.data$chrom1} --start {.data$pos1} --end {.data$pos2} ",
-                      "--output_file {.data$svtype}_{.data$chrom1}:{.data$pos1}-{.data$pos2}"))
+                      "-c {.data$chrom1} -s {.data$pos1} -e {.data$pos2} ",
+                      "-o {.data$svtype}_{.data$chrom1}:{.data$pos1}-{.data$pos2}"),
+                    TRUE ~ "XXXX")
       )
     )
 }
