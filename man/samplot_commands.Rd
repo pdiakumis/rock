@@ -4,7 +4,8 @@
 \alias{samplot_commands}
 \title{Prepare Samplot Commands from VCF}
 \usage{
-samplot_commands(vcf_file, bam_file, sample_nm, other = "")
+samplot_commands(vcf_file, bam_file, sample_nm, out_dir = NULL,
+  other = "")
 }
 \arguments{
 \item{vcf_file}{Path to the Manta VCF file (any SV VCF should work, really). Can be compressed or not.}
@@ -12,6 +13,8 @@ samplot_commands(vcf_file, bam_file, sample_nm, other = "")
 \item{bam_file}{Path(s) to BAM file(s) (atomic vector).}
 
 \item{sample_nm}{Name(s) of BAM file(s) to display in plot (atomic vector).}
+
+\item{out_dir}{Output directory.}
 
 \item{other}{Other arguments to pass to Samplot (single string).}
 }
