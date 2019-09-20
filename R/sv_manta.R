@@ -96,17 +96,34 @@ prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
   DF <- read_manta_vcf(vcf)
 
   # BNDs
+
   # We have POS of mate2 through INFO/END or INFO/BPI_END, just need CHROM.
-  # Just keep BND mate with index 1 (i.e. discard duplicated information)
+  # Sometimes with post-processing a mate might get filtered out.
+  # In these cases just filter out the orphan mate.
+  #
+  # Keep BND mate with index 1 (i.e. discard duplicated information)
   # see <https://github.com/Illumina/manta/blob/master/docs/developerGuide/ID.md>
   df_bnd <- DF %>%
     dplyr::filter(.data$svtype == "BND") %>%
     dplyr::bind_cols(., .[match(.$id, .$mateid), "chrom1"]) %>%
     dplyr::rename(chrom2 = .data$chrom11) %>%
-    dplyr::mutate(bndid = substring(.data$id, nchar(.data$id))) %>%
+    dplyr::mutate(bndid = substring(.data$id, nchar(.data$id)))
+
+  orphan_mates <- df_bnd %>%
+    dplyr::filter(.data$chrom2 %in% NA) %>%
+    dplyr::mutate(orphan = paste0(.data$chrom1, ":", .data$pos1)) %>%
+    dplyr::pull(.data$orphan)
+
+  df_bnd <- df_bnd %>%
+    dplyr::filter(!is.na(.data$chrom2)) %>%
     dplyr::filter(.data$bndid == "1") %>%
     dplyr::select(.data$chrom1, .data$pos1, .data$chrom2,
                   .data$pos2, .data$id, .data$mateid, .data$svtype, .data$filter)
+
+  if (length(orphan_mates) > 0) {
+    warning(glue::glue("The following {length(orphan_mates)} orphan BND mates are removed:\n",
+                       paste(orphan_mates, collapse = "\n")))
+  }
 
   stopifnot(.manta_proper_pairs(df_bnd$id, df_bnd$mateid))
 
