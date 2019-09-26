@@ -98,6 +98,7 @@ prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
   # BNDs
 
   # We have POS of mate2 through INFO/END or INFO/BPI_END, just need CHROM.
+  # If no BPI, Manta doesn't annotate BNDs with END. Let's grab it from the mate's POS.
   # Sometimes with post-processing a mate might get filtered out.
   # In these cases just filter out the orphan mate.
   #
@@ -105,9 +106,10 @@ prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
   # see <https://github.com/Illumina/manta/blob/master/docs/developerGuide/ID.md>
   df_bnd <- DF %>%
     dplyr::filter(.data$svtype == "BND") %>%
-    dplyr::bind_cols(., .[match(.$id, .$mateid), "chrom1"]) %>%
+    dplyr::bind_cols(., .[match(.$id, .$mateid), c("chrom1", "pos1")]) %>%
     dplyr::rename(chrom2 = .data$chrom11) %>%
-    dplyr::mutate(bndid = substring(.data$id, nchar(.data$id)))
+    dplyr::mutate(pos2 = ifelse(is.na(.data$pos2), .data$pos11, .data$pos2),
+                  bndid = substring(.data$id, nchar(.data$id)))
 
   orphan_mates <- df_bnd %>%
     dplyr::filter(.data$chrom2 %in% NA) %>%
