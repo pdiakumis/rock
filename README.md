@@ -1,4 +1,7 @@
 
+[![Travis build
+status](https://travis-ci.org/umccr/rock.svg?branch=master)](https://travis-ci.org/umccr/rock)
+
 # Rocking R at UMCCR
 
 `rock` is an R package that (hopefully) helps with the day to day
@@ -30,6 +33,8 @@ You can do the following:
     * [devtools](#devtools)
     * [conda](#conda)
 * [Circos Plots](#circos-plots)
+    * [Input preparation](#input-preparation)
+    * [Run Circos](#run-circos)
 * [Piano Plots](#piano-plots)
 * [View CNV segments in IGV](#view-cnv-segments-in-igv)
 * [View BED values in IGV](#view-bed-values-in-igv)
@@ -41,13 +46,13 @@ You can do the following:
 ### devtools
 
 You can install the development version of `rock` from
-[GitHub](https://github.com/pdiakumis/rock) with:
+[GitHub](https://github.com/umccr/rock) with:
 
 ``` r
 # install.packages("devtools") # if not pre-installed
-devtools::install_github("pdiakumis/rock") # master version
-devtools::install_github("pdiakumis/rock@v1.2.3") # release v1.2.3
-devtools::install_github("pdiakumis/rock@abcd") # commit abcd
+devtools::install_github("umccr/rock") # master version
+devtools::install_github("umccr/rock@v1.2.3") # release v1.2.3
+devtools::install_github("umccr/rock@abcd") # commit abcd
 ```
 
 ``` r
@@ -66,43 +71,76 @@ like:
 conda install -c pdiakumis r-rock
 ```
 
-Note that this conda version can be used only with R v3.4.
-
 ## Circos Plots
 
-  - We can generate circos plots using the original
-    [circos](http://circos.ca/) software package, written in Perl.
-    **Note**: `circos` needs to be installed in your `PATH`.
+We can generate circos plots using the original
+[circos](http://circos.ca/) software package, written in Perl.
 
-  - Start by preparing the Manta and CNVkit calls. The required input
-    files will be written to
+`circos` needs to be installed in your `PATH` for it to work straight
+from within `rock`. I’ve had a terrible time trying to install `circos`
+either from source or from conda. The only way that I’ve found to
+consistently work is through Docker.
+
+I have a docker image available on
+[DockerHub](https://hub.docker.com/r/pdiakumis/circos), which you can
+pull (`docker pull pdiakumis/circos:0.69-6`) and then run as shown
+below.
+
+### Input preparation
+
+Start by preparing the Manta and CNVkit calls. The required input files
+will be written to
 `outdir`:
-
-<!-- end list -->
 
 ``` r
 manta <- system.file("extdata", "HCC2218_manta.vcf", package = "pebbles")
 cnvkit <- system.file("extdata", "HCC2218_cnvkit-call.cns", package = "pebbles")
 outdir <- "man/figures/perl_circos"
-circos_prep(outdir = outdir, manta = manta, cnv = cnvkit)
+rock::circos_prep(outdir = outdir, manta = manta, cnv = cnvkit)
 #> Warning in dir.create(outdir, recursive = TRUE): 'man/figures/perl_circos'
 #> already exists
-#> Exporting Manta and CNV circos files to 'man/figures/perl_circos'.
-#> Copying circos templates to 'man/figures/perl_circos'.
+#> Exporting Manta and/or CNV circos files to 'man/figures/perl_circos'.
+#> Registered S3 method overwritten by 'R.oo':
+#>   method        from       
+#>   throw.default R.methodsS3
+#> Copying circos templates to 'man/figures/perl_circos'. 'template' is cnvsv.
 ```
 
-  - Then execute the following `circos` command either on the command
-    line, or via the `plot_circos`
-function:
+### Run Circos
+
+Now comes the fun part of running the `circos` command. Depending on if
+you’ve managed to install a working version of `circos` or if you want
+to use the Docker version, you have the following options:
+
+  - If you can find `circos` in your R session, just run the following R
+    command. If you’re an RStudio user, you can make sure it recognises
+    the user’s PATH by opening the RStudio app via the terminal, or
+    perhaps following the suggestions here:
+    <https://stackoverflow.com/questions/31121645>
+
+<!-- end list -->
+
+``` r
+plot_circos(outdir = outdir, name = "my_fabulous_plot")
+```
+
+  - If you just want to run it on your command line, adjust the
+    following BASH
+command:
 
 <!-- end list -->
 
 ``` bash
-circos -nosvg -conf <outdir>/circos_simple.conf -outputdir <outdir> -outputfile foo_circos_cnvkit_manta.png
+circos -nosvg -conf <outdir>/circos_simple.conf -outputdir <outdir> -outputfile my_fabulous_plot_circos.png
 ```
 
-``` r
-plot_circos(outdir = outdir, name = "foo")
+  - If you want to run the Docker version on your command line from the
+    `outdir`:
+
+<!-- end list -->
+
+``` bash
+docker container run --rm -v $(pwd):/data pdiakumis/circos:0.69-6 -conf /data/circos.conf -outputdir /data
 ```
 
   - Result:
