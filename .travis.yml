@@ -1,14 +1,27 @@
-language: r
-cache: packages
+# Configure notification
+notifications:
+  email:
+    on_success: never
+    on_failure: always
 
 os:
   - linux
   - osx
 
-sudo: false
-bioc_packages:
-    - GenomicRanges
-    - OmicCircos
+language: bash
+
+install:
+  # Install miniconda
+  - source deploy/install_miniconda.sh
+  # Update conda and install packages
+  - conda update --yes conda
+  - conda install --yes conda-build jinja2 anaconda-client
+
+script:
+  - mkdir out
+  - conda build --R 3.6 deploy/conda-recipe --output-folder out
 
 after_success:
-  - Rscript -e 'covr::codecov()'
+  - test $TRAVIS_BRANCH = "master" &&
+    anaconda -t $CONDA_UPLOAD_TOKEN upload --force out/$TRAVIS_OS_NAME-64/*.tar.bz2
+
