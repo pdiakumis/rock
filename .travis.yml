@@ -15,6 +15,7 @@ install:
   - source deploy/install_miniconda.sh
   # Update conda and install packages
   - conda update --yes conda
+  - conda config --add channels defaults --add channels pdiakumis --add channels bioconda --add channels conda-forge
   - conda install --yes conda-build jinja2 anaconda-client
 
 script:
