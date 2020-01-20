@@ -12,7 +12,7 @@ read_manta_vcf(vcf)
 \value{
 A dataframe (\code{tibble}) with the following fields from the VCF:
 \itemize{
-\item chrom1: \code{CHROM}
+\item chrom1: \code{CHROM} (remove \code{chr} prefix (if any) for hg38 compatibility)
 \item pos1: \code{POS} | \code{INFO/BPI_START}
 \item pos2: \code{INFO/END} | \code{INFO/BPI_END}
 \item id: \code{ID}

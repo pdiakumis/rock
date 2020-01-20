@@ -8,7 +8,7 @@
 #'
 #' @param vcf Path to Manta VCF file (`.vcf.gz` or `.vcf`).
 #' @return A dataframe (`tibble`) with the following fields from the VCF:
-#'   * chrom1: `CHROM`
+#'   * chrom1: `CHROM` (remove `chr` prefix (if any) for hg38 compatibility)
 #'   * pos1: `POS` | `INFO/BPI_START`
 #'   * pos2: `INFO/END` | `INFO/BPI_END`
 #'   * id: `ID`
@@ -69,6 +69,8 @@ read_manta_vcf <- function(vcf) {
       dplyr::mutate(chrom1 = as.character(.data$chrom1))
 
   }
+
+  DF <- dplyr::mutate(DF, chrom1 = sub("chr", "", chrom1)) # handle hg38
   return(DF)
 }
 
