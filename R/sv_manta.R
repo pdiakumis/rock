@@ -70,8 +70,10 @@ read_manta_vcf <- function(vcf) {
 
   }
 
-  DF <- dplyr::mutate(DF, chrom1 = sub("chr", "", chrom1)) # handle hg38
-  return(DF)
+  DF %>%
+    dplyr::mutate(chrom1 = as.character(sub("chr", "", .data$chrom1)),
+                  pos1 = char2num(.data$pos1),
+                  pos2 = char2num(.data$pos2)) # sometimes get '.' in pos2 (e.g. from purple)
 }
 
 #' Prepare Manta VCF for Circos
