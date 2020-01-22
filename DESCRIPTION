@@ -3,8 +3,8 @@ Version: 0.0.10
 Title: Rocking R at UMCCR
 Description: Contains visualisation functions for bioinformatics work at UMCCR.
 Authors@R: person("Peter", "Diakumis", email = "peterdiakumis@gmail.com", role = c("aut", "cre"))
-URL: https://github.com/umccr/rock
-BugReports: https://github.com/umccr/rock/issues
+URL: https://github.com/pdiakumis/rock
+BugReports: https://github.com/pdiakumis/rock/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

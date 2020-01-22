@@ -1,6 +1,6 @@
 
 [![Travis build
-status](https://travis-ci.org/umccr/rock.svg?branch=master)](https://travis-ci.org/umccr/rock)
+status](https://travis-ci.org/pdiakumis/rock.svg?branch=master)](https://travis-ci.org/pdiakumis/rock)
 
 # Rocking R at UMCCR
 
@@ -46,13 +46,13 @@ You can do the following:
 ### devtools
 
 You can install the development version of `rock` from
-[GitHub](https://github.com/umccr/rock) with:
+[GitHub](https://github.com/pdiakumis/rock) with:
 
 ``` r
 # install.packages("devtools") # if not pre-installed
-devtools::install_github("umccr/rock") # master version
-devtools::install_github("umccr/rock@v1.2.3") # release v1.2.3
-devtools::install_github("umccr/rock@abcd") # commit abcd
+devtools::install_github("pdiakumis/rock") # master version
+devtools::install_github("pdiakumis/rock@v1.2.3") # release v1.2.3
+devtools::install_github("pdiakumis/rock@abcd") # commit abcd
 ```
 
 ``` r
@@ -64,8 +64,8 @@ require(rock)
 There is a conda package version at
 <https://anaconda.org/pdiakumis/r-rock> which is updated regularly.
 
-You need to create a conda environment, and then install with something
-like:
+You need to create a conda environment, and then install with:
+
 
 ``` bash
 conda install -c pdiakumis r-rock

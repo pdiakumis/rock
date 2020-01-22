@@ -8,7 +8,7 @@ package:
 
 source:
 
-  git_url: https://github.com/umccr/rock
+  git_url: https://github.com/pdiakumis/rock
   git_tag: master
 
 build:
@@ -69,7 +69,7 @@ test:
     # Put any additional test requirements here.
 
 about:
-  home: https://github.com/umccr/rock
+  home: https://github.com/pdiakumis/rock
   license: MIT + file LICENSE
   summary: Contains visualisation functions for bioinformatics work at UMCCR.
   license_family: MIT
