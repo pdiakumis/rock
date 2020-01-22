@@ -42,3 +42,7 @@ guess_file_type <- function(file) {
     grepl("csv$", file) ~ "CSV",
     TRUE ~ "Other")
 }
+
+char2num <- function(x, keep = "0-9") {
+  return(as.numeric(gsub(paste0("[^", keep, "]+"), "", x)))
+}
