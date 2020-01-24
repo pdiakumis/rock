@@ -2,8 +2,10 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^README\.Rmd$
-.travis.yml
+^\.travis\.yml
 ^data-raw$
 ^codecov\.yml$
 ^tmp$
 ^test_rock\.R$
+^deploy$
+^bump\.sh$
