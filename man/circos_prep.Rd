@@ -4,7 +4,7 @@
 \alias{circos_prep}
 \title{Generate Perl Circos Plot Files}
 \usage{
-circos_prep(outdir = "circos", manta = NULL, cnv = NULL)
+circos_prep(outdir = "circos", manta = NULL, cnv = NULL, ...)
 }
 \arguments{
 \item{outdir}{Directory to write the files to.}
@@ -12,6 +12,8 @@ circos_prep(outdir = "circos", manta = NULL, cnv = NULL)
 \item{manta}{Path to Manta VCF file.}
 
 \item{cnv}{Path to copy number call file.}
+
+\item{...}{Additional arguments for \code{prep_manta_vcf}.}
 }
 \value{
 Generates the required files for a Perl circos plot with structural

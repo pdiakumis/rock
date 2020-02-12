@@ -7,6 +7,7 @@
 #' @param outdir Directory to write the files to.
 #' @param manta Path to Manta VCF file.
 #' @param cnv Path to copy number call file.
+#' @param ... Additional arguments for `prep_manta_vcf`.
 #' @return Generates the required files for a Perl circos plot with structural
 #'   variant links and/or copy number variant segments.
 #'   Returns the paths to these files invisibly.
@@ -22,7 +23,7 @@
 #' circos_prep(outdir = outdir, cnv = cnv) # no CNVs provided
 #' }
 #' @export
-circos_prep <- function(outdir = "circos", manta = NULL, cnv = NULL) {
+circos_prep <- function(outdir = "circos", manta = NULL, cnv = NULL, ...) {
 
   template <- NULL
   stopifnot((!is.null(manta) && file.exists(manta)) || (!is.null(cnv) && file.exists(cnv)))
@@ -33,7 +34,7 @@ circos_prep <- function(outdir = "circos", manta = NULL, cnv = NULL) {
   # template can be 'cnvsv', 'sv', or 'cnv'
   if (!is.null(manta)) {
     template <- "sv"
-    manta <- prep_manta_vcf2(manta)
+    manta <- prep_manta_vcf2(manta, ...)
     readr::write_tsv(manta, file.path(outdir, "SAMPLE.link.circos"), col_names = FALSE)
   }
   if (!is.null(cnv)) {
