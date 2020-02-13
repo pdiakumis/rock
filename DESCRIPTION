@@ -1,5 +1,5 @@
 Package: rock
-Version: 0.0.13
+Version: 0.0.14
 Title: Rocking R at UMCCR
 Description: Contains visualisation functions for bioinformatics work at UMCCR.
 Authors@R: person("Peter", "Diakumis", email = "peterdiakumis@gmail.com", role = c("aut", "cre"))
