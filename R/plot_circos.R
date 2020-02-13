@@ -7,6 +7,8 @@
 #' @param outdir Directory to write the files to.
 #' @param manta Path to Manta VCF file.
 #' @param cnv Path to copy number call file.
+#' @param genome Genome assembly. "hg19" (default) or "hg38".
+#'   hg19 gets converted to GRCh37 automatically.
 #' @param ... Additional arguments for `prep_manta_vcf`.
 #' @return Generates the required files for a Perl circos plot with structural
 #'   variant links and/or copy number variant segments.
@@ -20,13 +22,15 @@
 #'
 #' circos_prep(outdir = outdir, manta = manta, cnv = cnv)
 #' circos_prep(outdir = outdir, manta = manta) # no CNVs provided
-#' circos_prep(outdir = outdir, cnv = cnv) # no CNVs provided
+#' circos_prep(outdir = outdir, manta = manta, genome = "hg19") # no CNVs provided
+#' circos_prep(outdir = outdir, cnv = cnv) # no SVs provided
 #' }
 #' @export
-circos_prep <- function(outdir = "circos", manta = NULL, cnv = NULL, ...) {
+circos_prep <- function(outdir = "circos", manta = NULL, cnv = NULL, genome = "hg19", ...) {
 
   template <- NULL
   stopifnot((!is.null(manta) && file.exists(manta)) || (!is.null(cnv) && file.exists(cnv)))
+  stopifnot(genome %in% c("hg19", "hg38"), length(genome) == 1)
   dir.create(outdir, recursive = TRUE)
 
   message(glue::glue("Exporting Manta and/or CNV circos files to '{outdir}'."))
@@ -43,11 +47,16 @@ circos_prep <- function(outdir = "circos", manta = NULL, cnv = NULL, ...) {
     readr::write_tsv(cnv, file.path(outdir, "SAMPLE.cnv.circos"), col_names = FALSE)
   }
 
-  message(glue::glue("Copying circos templates to '{outdir}'. 'template' is {template}."))
-  file.copy(from = system.file("templates/circos", glue::glue("circos_{template}.conf"), package = "pebbles"),
+  message(glue::glue("Copying circos templates to '{outdir}'."))
+  message(glue::glue("'template' is {template}. 'genome' is {genome}."))
+
+  circos_template_dir <- glue::glue("templates/circos{ifelse(genome == 'hg38', '/hg38', '')}")
+  file.copy(from = system.file(circos_template_dir, glue::glue("circos_{template}.conf"), package = "pebbles"),
             to = file.path(outdir, "circos.conf"), overwrite = TRUE)
-  file.copy(system.file("templates/circos", "gaps.txt", package = "pebbles"), outdir, overwrite = TRUE)
-  file.copy(system.file("templates/circos", "ideogram.conf", package = "pebbles"), outdir, overwrite = TRUE)
+  file.copy(from = system.file(circos_template_dir, "gaps.txt", package = "pebbles"),
+            to = file.path(outdir), overwrite = TRUE)
+  file.copy(from = system.file(circos_template_dir, "ideogram.conf", package = "pebbles"),
+            to = file.path(outdir), overwrite = TRUE)
 
   invisible(list(sv = manta, cnv = cnv))
 }

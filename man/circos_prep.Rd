@@ -4,7 +4,8 @@
 \alias{circos_prep}
 \title{Generate Perl Circos Plot Files}
 \usage{
-circos_prep(outdir = "circos", manta = NULL, cnv = NULL, ...)
+circos_prep(outdir = "circos", manta = NULL, cnv = NULL,
+  genome = "hg19", ...)
 }
 \arguments{
 \item{outdir}{Directory to write the files to.}
@@ -12,6 +13,9 @@ circos_prep(outdir = "circos", manta = NULL, cnv = NULL, ...)
 \item{manta}{Path to Manta VCF file.}
 
 \item{cnv}{Path to copy number call file.}
+
+\item{genome}{Genome assembly. "hg19" (default) or "hg38".
+hg19 gets converted to GRCh37 automatically.}
 
 \item{...}{Additional arguments for \code{prep_manta_vcf}.}
 }
@@ -33,6 +37,7 @@ outdir <- "~/Desktop/tmp/circos"
 
 circos_prep(outdir = outdir, manta = manta, cnv = cnv)
 circos_prep(outdir = outdir, manta = manta) # no CNVs provided
-circos_prep(outdir = outdir, cnv = cnv) # no CNVs provided
+circos_prep(outdir = outdir, manta = manta, genome = "hg19") # no CNVs provided
+circos_prep(outdir = outdir, cnv = cnv) # no SVs provided
 }
 }
