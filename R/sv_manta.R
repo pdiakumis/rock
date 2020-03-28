@@ -210,7 +210,27 @@ prep_manta_vcf2 <- function(vcf, ...) {
   stopifnot(length(chr_cols) == 24)
 
   links_coloured <- sv %>%
-    dplyr::mutate(min_chrom = paste0("hs", min_chrom_v(.data$chrom1, .data$chrom2))) %>%
+    dplyr::mutate(alt_chrom1 = !.data$chrom1 %in% c(1:22, "X", "Y"),
+                  alt_chrom2 = !.data$chrom2 %in% c(1:22, "X", "Y"))
+
+  alt_sv <- links_coloured %>%
+    dplyr::filter(.data$alt_chrom1 | .data$alt_chrom2) %>%
+    dplyr::mutate(
+      num = dplyr::row_number(),
+      x = paste0(.data$num, ": ", .data$svtype, ", ",
+                 .data$chrom1, ":", .data$pos1, " <-> ", .data$chrom2, ":", .data$pos2)) %>%
+    dplyr::pull(.data$x)
+
+  if (length(alt_sv > 0)) {
+    warning(glue::glue(
+      "The following {length(alt_sv)} SVs mapping to alt regions are removed:\n",
+      paste(alt_sv, collapse = "\n")))
+  }
+
+
+  links_coloured <- links_coloured %>%
+    dplyr::filter(!(.data$alt_chrom1 | .data$alt_chrom2)) %>%
+    dplyr::mutate(min_chr = paste0("hs", min_chrom_v(.data$chrom1, .data$chrom2))) %>%
     dplyr::mutate(chrom1 = paste0("hs", .data$chrom1),
                   chrom2 = paste0("hs", .data$chrom2)) %>%
     dplyr::mutate(col = dplyr::case_when(
@@ -218,7 +238,7 @@ prep_manta_vcf2 <- function(vcf, ...) {
       svtype == "DUP" ~ '(0,255,0)',
       svtype == "INS" ~ '(255,0,255)',
       svtype == "INV" ~ '(255,165,0)',
-      svtype == "BND" ~ chr_cols[min_chrom],
+      svtype == "BND" ~ chr_cols[.data$min_chr],
       TRUE ~ '0,0,0')) %>%
     dplyr::mutate(pos1b = .data$pos1,
                   pos2b = .data$pos2,
