@@ -4,8 +4,7 @@
 \alias{circos_prep}
 \title{Generate Perl Circos Plot Files}
 \usage{
-circos_prep(outdir = "circos", manta = NULL, cnv = NULL,
-  genome = "hg19", ...)
+circos_prep(outdir = "circos", manta = NULL, cnv = NULL, genome = "hg19", ...)
 }
 \arguments{
 \item{outdir}{Directory to write the files to.}

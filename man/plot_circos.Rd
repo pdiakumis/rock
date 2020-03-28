@@ -10,7 +10,7 @@ plot_circos(outdir = "circos", name = "x")
 \item{outdir}{Directory where the files are located, and where the plot will
 be written to.}
 
-\item{name}{Prefix of plot file (suffix: \code{_circos.png}) (default: \code{x}).}
+\item{name}{Prefix of plot file (suffix: \verb{_circos.png}) (default: \code{x}).}
 }
 \value{
 Generates a Perl circos plot in the outdir.

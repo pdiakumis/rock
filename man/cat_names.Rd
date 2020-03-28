@@ -4,7 +4,9 @@
 \name{cat_names}
 \alias{cat_names}
 \title{Names of awesome cats}
-\format{Atomic character vector with 3 elements}
+\format{
+Atomic character vector with 3 elements
+}
 \usage{
 data(cat_names)
 }

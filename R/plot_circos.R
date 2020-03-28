@@ -31,8 +31,9 @@ circos_prep <- function(outdir = "circos", manta = NULL, cnv = NULL, genome = "h
   template <- NULL
   stopifnot((!is.null(manta) && file.exists(manta)) || (!is.null(cnv) && file.exists(cnv)))
   stopifnot(genome %in% c("hg19", "hg38"), length(genome) == 1)
-  dir.create(outdir, recursive = TRUE)
-
+  if (!dir.exists(outdir)) {
+    dir.create(outdir, recursive = TRUE)
+  }
   message(glue::glue("Exporting Manta and/or CNV circos files to '{outdir}'."))
   # prepare Manta/CNVkit circos files
   # template can be 'cnvsv', 'sv', or 'cnv'

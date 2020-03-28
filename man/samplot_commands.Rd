@@ -4,8 +4,7 @@
 \alias{samplot_commands}
 \title{Prepare Samplot Commands from VCF}
 \usage{
-samplot_commands(vcf_file, bam_file, sample_nm, out_dir = NULL,
-  other = "")
+samplot_commands(vcf_file, bam_file, sample_nm, out_dir = NULL, other = "")
 }
 \arguments{
 \item{vcf_file}{Path to the Manta VCF file (any SV VCF should work, really). Can be compressed or not.}

@@ -4,8 +4,7 @@
 \alias{plot_circos_baf}
 \title{Generate Perl Circos PURPLE BAF Plot}
 \usage{
-plot_circos_baf(purple_dir = NULL, out_dir = "circos_baf",
-  tumor_name = NULL)
+plot_circos_baf(purple_dir = NULL, out_dir = "circos_baf", tumor_name = NULL)
 }
 \arguments{
 \item{purple_dir}{Directory where the circos files are located ('purple/circos').}

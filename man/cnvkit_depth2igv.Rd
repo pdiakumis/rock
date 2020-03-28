@@ -4,8 +4,7 @@
 \alias{cnvkit_depth2igv}
 \title{Write CNVkit cnr to wig}
 \usage{
-cnvkit_depth2igv(cnr, out_file = NULL, track_name = "val",
-  col = "lightblue")
+cnvkit_depth2igv(cnr, out_file = NULL, track_name = "val", col = "lightblue")
 }
 \arguments{
 \item{cnr}{Path to CNVkit's \code{cnvkit.cnr} file, with \code{chromosome},
