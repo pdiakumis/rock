@@ -108,9 +108,16 @@ prep_manta_vcf <- function(vcf, filter_pass = FALSE) {
   #
   # Keep BND mate with index 1 (i.e. discard duplicated information)
   # see <https://github.com/Illumina/manta/blob/master/docs/developerGuide/ID.md>
-  df_bnd <- DF %>%
-    dplyr::filter(.data$svtype == "BND") %>%
-    dplyr::bind_cols(., .[match(.$id, .$mateid), c("chrom1", "pos1")]) %>%
+  df_bnd1 <- DF %>%
+    dplyr::filter(.data$svtype == "BND")
+
+  match_id2mateid <- match(df_bnd1$id, df_bnd1$mateid)
+  df_bnd2 <-
+    df_bnd1[match_id2mateid, c("chrom1", "pos1")] %>%
+    dplyr::rename(chrom11 = .data$chrom1,
+                  pos11 = .data$pos1)
+  df_bnd <-
+    dplyr::bind_cols(df_bnd1, df_bnd2) %>%
     dplyr::rename(chrom2 = .data$chrom11) %>%
     dplyr::mutate(pos2 = ifelse(is.na(.data$pos2), .data$pos11, .data$pos2),
                   bndid = substring(.data$id, nchar(.data$id)))
@@ -223,7 +230,8 @@ prep_manta_vcf2 <- function(vcf, ...) {
 
   if (length(alt_sv > 0)) {
     warning(glue::glue(
-      "The following {length(alt_sv)} SVs mapping to alt regions are removed:\n",
+      "The following {length(alt_sv)} SVs mapping to alt regions will not be ",
+      "shown in the circos plot:\n",
       paste(alt_sv, collapse = "\n")))
   }
 
