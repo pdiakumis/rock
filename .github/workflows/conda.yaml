@@ -1,0 +1,35 @@
+name: conda-upload
+
+on: [push, pull_request]
+
+jobs:
+  conda-build-upload:
+    # For tag pushes, we want to assure only the tag event triggers CI,
+    # not the accompanying commit:
+    if: "! startsWith(github.event.head_commit.message, 'Bump ') || startsWith(github.ref, 'refs/tags/')"
+    name: Build conda package & deploy pkgdown website
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up miniconda
+        uses: conda-incubator/setup-miniconda@v1
+        with:
+          # Do everything inside the base env
+          auto-update-conda: true
+          auto-activate-base: true
+          activate-environment: ""
+          mamba-version: "*"
+          channels: "pdiakumis,conda-forge,bioconda"
+
+      - name: Conda package build and upload
+        shell: bash -l {0}
+        run: |
+          mamba install conda-build conda-verify anaconda-client
+          mamba build --R 4.0 deploy/conda-recipe/
+          PKG_PATH="/usr/share/miniconda/conda-bld/linux-64/r-rock-*.tar.bz2"
+          anaconda -t ${{ secrets.ANACONDA_UPLOAD_TOKEN }} upload --force $PKG_PATH
+
+

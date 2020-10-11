@@ -37,7 +37,7 @@ requirements:
     - r-pebbles
     - r-purrr
     - r-readr
-    - r-rlang >=0.1.2
+    - r-rlang
     - r-scales
     - r-tibble
     - r-tidyr
@@ -51,7 +51,7 @@ requirements:
     - r-pebbles
     - r-purrr
     - r-readr
-    - r-rlang >=0.1.2
+    - r-rlang
     - r-scales
     - r-tibble
     - r-tidyr
